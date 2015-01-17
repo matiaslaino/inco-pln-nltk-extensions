@@ -21,13 +21,14 @@ class FreeLing(TaggerI):
         return self.__tag_custom(tokens, False, verbose)
 
     def tag_full(self, tokens, verbose=False):
-        return self.__tag_custom(tokens, True, verbose)
-
-    def __tag_custom(self, tokens, is_full, verbose=False):
-        result = []
-
-        # tenemos una lista de tokens, tenemos que guardarlo en un archivo.
         string = "\n".join(tokens)
+        return self.__tag_custom(string, True, verbose, tokenized=True)
+
+    def tag_string_full(self, string, verbose=False):
+        return self.__tag_custom(string, True, verbose, tokenized=True)
+
+    def __tag_custom(self, string, is_full, verbose=False, tokenized=False):
+        result = []
 
         if verbose:
             print "--- Creando archivos temporales ---"
@@ -47,7 +48,7 @@ class FreeLing(TaggerI):
         if verbose:
             print "--- Ejecutando FreeLing ---"
 
-        FreeLing.__execute(self.path_to_tagger, input_name, output_name)
+        FreeLing.__execute(self.path_to_tagger, input_name, output_name, tokenized=tokenized)
 
         if verbose:
             print "--- Procesando salida de FreeLing ---"
@@ -83,7 +84,7 @@ class FreeLing(TaggerI):
         return result
 
     @staticmethod
-    def __execute(tagger_path, input_file_path, output_file_path, verbose=False):
+    def __execute(tagger_path, input_file_path, output_file_path, verbose=False, tokenized=False):
         """
         Ejecuta el tagger sobre un archivo, y escribe la salida en otro.
         """
@@ -109,7 +110,12 @@ class FreeLing(TaggerI):
         if verbose:
             print "Ruta de configuración: <" + bin_path + ">"
 
-        execution_string += " -f " + cfg_path + " --lang es --inpf plain --outf tagged"
+        if tokenized:
+            input_format_flag = 'tokenized'
+        else:
+            input_format_flag = 'plain'
+
+        execution_string += " -f " + cfg_path + " --lang es --inpf " + input_format_flag + " --outf tagged"
 
         execution_string += " <" + input_file_path
         execution_string += " >" + output_file_path

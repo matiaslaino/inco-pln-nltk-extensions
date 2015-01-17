@@ -21,15 +21,20 @@ class TreeTagger(TaggerI):
             raise Exception("No se encuentra ejecutable de TreeTagger.")
 
     def tag(self, tokens):
-        return self.__tag_custom(tokens, False)
+        string = "\n".join(tokens)
+
+        return self.__tag_custom(string, False)
 
     def tag_full(self, tokens):
-        return self.__tag_custom(tokens, True)
-
-    def __tag_custom(self, tokens, is_full):
-        result = []
-        # tenemos una lista de tokens, tenemos que guardarlo en un archivo.
         string = "\n".join(tokens)
+
+        return self.__tag_custom(string, True)
+
+    def tag_string_full(self, string):
+        return self.__tag_custom(string, True)
+
+    def __tag_custom(self, string, is_full):
+        result = []
 
         temp_input = tempfile.NamedTemporaryFile(delete=False, prefix='treetagger_input_')
         temp_output = tempfile.NamedTemporaryFile(delete=False, prefix='treetagger_output_')

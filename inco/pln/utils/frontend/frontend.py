@@ -1,8 +1,8 @@
 import ttk
 
-from inco.pln.utils.frontend.control_parsing import ControlParsing
-
-from inco.pln.utils.frontend.control_tagging import ControlTagging
+from inco.pln.utils.frontend.control_parse import ControlParse
+from inco.pln.utils.frontend.control_tag import ControlTag
+from inco.pln.utils.frontend.control_tokenize import ControlTokenize
 from inco.pln.utils.frontend.menu_bar import MenuBar
 
 
@@ -17,9 +17,9 @@ n = ttk.Notebook(root)
 
 MenuBar(root)
 
-f2 = ttk.Frame(n, width=600, height=600)  # second page
-n.add(ControlTagging(n).frame, text='Tagging')
-n.add(ControlParsing(n).frame, text='Parsing')
+n.add(ControlTokenize(n).frame, text='Tokenize')
+n.add(ControlTag(n).frame, text='Tag')
+n.add(ControlParse(n).frame, text='Parse')
 n.pack()
 
 root.mainloop()

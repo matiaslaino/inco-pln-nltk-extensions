@@ -63,6 +63,6 @@ class FreeLing(FreeLingBase, ParserI):
             print e
             exit()
 
-        tree = self._execute(str_result, True)
+        tree = self.execute(str_result, True)
 
         return tree

@@ -2,10 +2,15 @@ from Tkinter import Menu, Toplevel, StringVar
 import tkFileDialog
 from ttk import *
 
+from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
+
+
 __author__ = 'Matias'
 
 
 class MenuBar:
+    __settings_file_name = "config.txt"
+
     def open_configuration(self):
         filewin = Toplevel(self.parent)
         filewin.wm_title('Configuration')
@@ -48,9 +53,21 @@ class MenuBar:
         control.grid(row=i, column=2)
         i += 1
 
-        control = Button(filewin, text="Apply")
+        control = Button(filewin, text="Apply", command=self.__apply_configuration)
         control.grid(row=i, columnspan=2)
 
+        # load saved settings
+        settings = ConfigurationManager.load()
+        if settings is not None:
+            self.var_freeling_path.set(settings['freeling_path'])
+            self.var_treetagger_path.set(settings['treetagger_path'])
+            self.var_maltparser_path.set(settings['maltparser_path'])
+            self.var_maltparser_model_path.set(settings['maltparser_model_path'])
+
+    def __apply_configuration(self):
+        ConfigurationManager.save(self.var_freeling_path.get(), self.var_treetagger_path.get(),
+                                  self.var_maltparser_path.get(),
+                                  self.var_maltparser_model_path.get())
 
     def browse_freeling(self):
         filename = tkFileDialog.askopenfilename(filetypes=(("Windows executable files", "*.exe"),

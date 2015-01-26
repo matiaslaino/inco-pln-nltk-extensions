@@ -102,3 +102,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Custom
+inco/pln/utils/frontend/settings.txt

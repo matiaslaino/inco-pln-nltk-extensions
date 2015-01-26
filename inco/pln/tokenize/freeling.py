@@ -15,7 +15,7 @@ class FreeLing(FreeLingBase, TokenizerI):
     def tokenize(self, string):
         # hack: add two newlines to prevent FreeLing from repeating output...
         string += "\n\n"
-        return self._execute(string, False)
+        return self.execute(string, False)
 
     def process_output(self, file_path):
         result = []

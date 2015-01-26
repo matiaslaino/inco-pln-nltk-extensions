@@ -48,17 +48,17 @@ class FreeLing(TaggerI, FreeLingBase):
 
     def tag(self, tokens):
         string = "\n".join(tokens)
-        return self._execute(string, True)
+        return self.execute(string, True)
 
     def tag_full(self, tokens):
         self.is_full = True
         string = "\n".join(tokens)
-        return self._execute(string, True)
+        return self.execute(string, True)
 
     def tag_string_full(self, string):
         self.is_full = True
 
-        return FreeLing._execute(string, False)
+        return self.execute(string, False)
 
     @staticmethod
     def __convert_line(input_line):

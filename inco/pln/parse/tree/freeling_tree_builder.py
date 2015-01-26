@@ -9,8 +9,8 @@ class FreeLingTreeBuilder():
     def __init__(self):
         pass
 
-    __regex_leaf = ".*\((.*?) .*? (.*?) -\)"
-    __regex_inner_node = "\+?(.*)\["
+    __regex_leaf = ".*\((.*?)-\)$"
+    __regex_inner_node = "\+?(.*)\[$"
     __regex_line = "( *)(.*)"
 
     def build(self, tree_str):
@@ -23,6 +23,7 @@ class FreeLingTreeBuilder():
         stack = []
 
         for line in lines:
+            line = line.rstrip()
             if line != "" and not line.isspace():
                 line_match = c_regex_line.match(line)
 
@@ -39,7 +40,7 @@ class FreeLingTreeBuilder():
                         is_inner = True
                     else:
                         # hoja
-                        tree_node = Tree(leaf_match.group(1) + " " + leaf_match.group(2), [])
+                        tree_node = Tree(leaf_match.group(1), [])
                         is_inner = False
 
                     if len(stack) > 0 and stack[-1] is not None:

@@ -13,7 +13,7 @@ class FreeLingBase:
         if not os.path.isfile(path_to_tagger):
             raise Exception("No se encuentra ejecutable de FreeLing.")
 
-    def _execute(self, string, tokenized=False):
+    def execute(self, string, tokenized=False):
         if self.verbose:
             print "--- Creando archivos temporales ---"
 

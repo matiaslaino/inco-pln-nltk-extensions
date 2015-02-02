@@ -12,25 +12,59 @@ import inco.pln.tagging_constants as constants
 
 class TreeTagger(TaggerI):
     """
-    Wrapper para NLTK de TreeTagger
+    TreeTagger wrapper
     """
 
-    def __init__(self, tagger_path):
-        self.tagger_path = tagger_path
-        if not os.path.isfile(tagger_path):
-            raise Exception("No se encuentra ejecutable de TreeTagger.")
+    def __init__(self, path_to_tagger):
+        """
+        Constructor.
+
+        :param path_to_tagger: path to binary
+        :type path_to_tagger: str
+        """
+
+        self.tagger_path = path_to_tagger
+        if not os.path.isfile(path_to_tagger):
+            raise Exception("TreeTagger executable not found")
 
     def tag(self, tokens):
+        """
+        Tags a collection of tokens.
+
+        :param tokens: the collection of tokens to POS tag.
+        :type tokens: list(str)
+        :return: the collection of tokens, POS tagged. Each entry contains: WORD POS-TAG
+        :rtype: list(dict)
+        """
+
         string = "\n".join(tokens)
 
         return self.__tag_custom(string, False)
 
     def tag_full(self, tokens):
+        """
+        Tags a collection of tokens.
+
+        :param tokens: the collection of tokens to POS tag.
+        :type tokens: list(str)
+        :return: the collection of tokens, POS tagged. Each entry contains: WORD LEMMA COARSE-TAG POS-TAG FEATURES
+        :rtype: list(dict)
+        """
+
         string = "\n".join(tokens)
 
         return self.__tag_custom(string, True)
 
     def tag_string_full(self, string):
+        """
+        Tags a collection of tokens.
+
+        :param string: string to POS tag.
+        :type string: str
+        :return: the collection of tokens, POS tagged. Each entry contains: WORD LEMMA COARSE-TAG POS-TAG FEATURES
+        :rtype: list(dict)
+        """
+
         return self.__tag_custom(string, True)
 
     def __tag_custom(self, string, is_full):
@@ -39,7 +73,7 @@ class TreeTagger(TaggerI):
         temp_input = tempfile.NamedTemporaryFile(delete=False, prefix='treetagger_input_')
         temp_output = tempfile.NamedTemporaryFile(delete=False, prefix='treetagger_output_')
 
-        # escribir string a archivo temp de entrada
+        # write input string to a temporary file
         temp_input.write(string.encode("utf-8"))
 
         output_name = temp_output.name
@@ -48,14 +82,16 @@ class TreeTagger(TaggerI):
         temp_input.close()
         temp_output.close()
 
+        # execute TreeTagger
         TreeTagger.__execute(self.tagger_path, input_name, output_name)
 
-        # hay que procesar el archivo leido, hay que leerlo primero.
+        # process tagger output
         with open(output_name) as output_file:
             for line in output_file:
                 converted_line = TreeTagger.__convert_line(line)
 
                 if is_full:
+                    # in full mode is where the most information on a token is provided
                     result.append(dict([(constants.WORD, converted_line[constants.WORD]),
                                         (constants.LEMMA, converted_line[constants.LEMMA]),
                                         (constants.COARSE_TAG, converted_line[constants.COARSE_TAG]),
@@ -65,6 +101,7 @@ class TreeTagger(TaggerI):
                                             (constants.ORIGINAL_TAG, converted_line[constants.ORIGINAL_TAG])
                                         ]))]))
                 else:
+                    # in standard mode, only the word and tags are provided for each token.
                     result.append(dict([(constants.WORD, converted_line[constants.WORD]),
                                         (constants.ORIGINAL_TAG, converted_line[constants.ORIGINAL_TAG])]))
 
@@ -76,14 +113,14 @@ class TreeTagger(TaggerI):
     @staticmethod
     def __execute(tagger_path, input_file_path, output_file_path):
         """
-        Ejecuta TreeTagger sobre un archivo, y escribe la salida en otro.
+        Executes TreeTagger binary.
+        :return: binary result code
+        :rtype: int
         """
 
-        # la ejecucion es de la forma INPUT OUTPUT
-
+        # todo: this may not be necessary
         bat_name = "tag-spanish.bat"
 
-        # verificar que la ruta del tagger pasada incluya el ejecutable, incluirlo si no esta
         # TODO windows / linux?
 
         execution_string = tagger_path
@@ -96,21 +133,28 @@ class TreeTagger(TaggerI):
         print execution_string
 
         res_code = subprocess.call(execution_string)
-        # validar result code
+
+        return res_code
 
     @staticmethod
     def __convert_line(input_line):
         """
-        Convierte una linea de output de TreeTagger a un diccionario.
+        Converts a single line of FreeLing output into a dictionary.
 
-        claves del diccionario:
+        dictionary keys:
             word
             lemma
             original_tag
             coarse_tag
             pos_tag
+
+        :param input_line: line to convert from FreeLing format to a dictionary.
+        :type input_line: str
+        :return the FreeLing output line, formatted into a dictionary
+        :rtype: dict
         """
-        # forma: palabra, lemma, coarse tag, pos tag, original tag
+
+        # form: word, lemma, coarse tag, pos tag, original tag
         tree_tagger_regular_expression = re.compile("^(.*)?\t(.*)?\t(.*)?$")
 
         utf8line = input_line.decode('utf8')
@@ -127,8 +171,17 @@ class TreeTagger(TaggerI):
     @staticmethod
     def __translate_tag(tree_tagger_tag, symbol=None):
         """
-        Convierte un tag de TreeTagger a un par (coarse_tag, pos_tag) usando las etiquetas Eagle.
+        Translates a TreeTagger tag into a pair (coarse-tag, pos-tag) using EAGLES tag set for spanish.
+
+        :param tree_tagger_tag: TreeTagger tag
+        :type tree_tagger_tag: str
+        :param symbol: Symbol that corresponds to the supplied tag.
+        :type symbol: str
+        :return: Pair (coarse-tag, pos-tag) using EAGLES tag set.
+        :rtype: tuple(str, str)
         """
+
+        # todo: move to own class.
 
         coarse_tag = None
         pos_tag = None
@@ -449,7 +502,3 @@ class TreeTagger(TaggerI):
             pos_tag = 'V0N0000'
 
         return coarse_tag, pos_tag
-
-
-# nltk.tag.inco.TreeTagger = TreeTagger
-

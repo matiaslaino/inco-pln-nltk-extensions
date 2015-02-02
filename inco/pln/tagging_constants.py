@@ -1,4 +1,4 @@
-__author__ = 'Matias'
+__author__ = 'Matias Laino'
 
 WORD = 'word'
 LEMMA = 'lemma'

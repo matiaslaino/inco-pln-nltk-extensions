@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import codecs
-
 import json
 import subprocess
 import tempfile
@@ -9,7 +8,6 @@ import os
 from nltk import ParserI
 
 from inco.pln.parse.tree.maltparser_tree_builder import MaltParserTreeBuilder
-
 import inco.pln.tagging_constants as constants
 
 
@@ -17,7 +15,21 @@ __author__ = 'Matias'
 
 
 class MaltParser(ParserI):
+    """
+    MaltParser wrapper.
+    """
+
     def __init__(self, path_to_jar, path_to_model):
+        """
+        Constructor.
+
+        :param path_to_jar: path to the MaltParser JAR file.
+        :type path_to_jar: str
+        :param path_to_model: path to the MaltParser model file (.mco).
+        :type path_to_model: str
+        :raise Exception: if MaltParser JAR or model files are not found.
+        """
+
         self.path_to_model = path_to_model
         self.path_to_jar = path_to_jar
 
@@ -26,13 +38,23 @@ class MaltParser(ParserI):
         if not os.path.isfile(path_to_model):
             raise Exception("No se encuentra modelo para el Español de MaltParser.")
 
-    def parse(self, sent_str, verbose=False):
-        # traducir desde nuestro formato esperado al formato de entrada de MaltParser.
-        # nuestro formato es un diccionario.
-        # El formato de entrada de MaltParser es:
-        # numero_token     palabra     lemma       coarse_tag      pos_tag     _   _   _   _   _
+    def parse(self, input_str, verbose=False):
+        """
+        Entry point for MaltParser.
+        Converts the input string, from our own format, to the expected format of MaltParser.
 
-        utf8_line = sent_str.decode('utf8')
+        :param input_str: input string
+        :type input_str: str
+        :param verbose: indicate if additional output will be sent to standard output.
+        :return: the processed parse tree.
+        :rtype: nltk.tree.Tree
+        """
+
+        # the expected MaltParser format is:
+        # token_number TAB word TAB lemma TAB coarse_tag TAB pos_tag TAB _ TAB _ TAB _ TAB _ TAB _
+        # our internal format is a dictionary saved as json.
+
+        utf8_line = input_str.decode('utf8')
         line = json.loads(utf8_line)
 
         i = 1
@@ -40,7 +62,7 @@ class MaltParser(ParserI):
         str_result = u''
 
         if verbose:
-            print "--- Procesando tokens de entrada  ---"
+            print "--- Processing input ---"
 
         try:
             for word_dict in line:
@@ -54,7 +76,7 @@ class MaltParser(ParserI):
             exit()
 
         if verbose:
-            print "--- Creando archivos temporales ---"
+            print "--- Creating temporal files ---"
 
         temp_input = tempfile.NamedTemporaryFile(delete=False)
         temp_output = tempfile.NamedTemporaryFile(delete=False)
@@ -68,12 +90,12 @@ class MaltParser(ParserI):
         input_name = temp_input.name
 
         if verbose:
-            print "--- Archivos temporales creados ---"
+            print "--- Executing MaltParser ---"
 
         res_code = self.__execute(input_name, output_name)
 
         if verbose:
-            print "Código retorno MaltParser: " + str(res_code)
+            print "MaltParser result code: " + str(res_code)
 
         parse_tree_str = ""
 
@@ -83,14 +105,14 @@ class MaltParser(ParserI):
                     parse_tree_str += line
 
         if verbose:
-            print "--- Borrando archivos temporales ---"
+            print "--- Deleting temporal files ---"
 
         os.remove(input_name)
         os.remove(output_name)
 
         if verbose:
-            print "Salida de MaltParser: \n" + parse_tree_str
-            print "--- Construyendo árbol de parseo ---"
+            print "Maltparser raw output: \n" + parse_tree_str
+            print "--- Building parse tree ---"
 
         tree_builder = MaltParserTreeBuilder()
         tree = tree_builder.build(parse_tree_str)
@@ -98,6 +120,18 @@ class MaltParser(ParserI):
         return tree
 
     def __execute(self, input_file_path, output_file_path, verbose=False):
+        """
+        Executes MaltParser.
+
+        :param input_file_path: input file path
+        :type input_file_path: str
+        :param output_file_path: destination output file path
+        :type output_file_path: str
+        :param verbose: indicates if additional information is outputted
+        :type verbose: bool
+        :return: MaltParser return
+        """
+
         model_working_dir = os.path.dirname(self.path_to_model)
         model_name = os.path.basename(self.path_to_model)
 
@@ -106,7 +140,7 @@ class MaltParser(ParserI):
                                                                                    input_file_path, output_file_path)
 
         if verbose:
-            print "Comando: <" + command + ">"
+            print "Execution string: <" + command + ">"
 
         # print command
         return MaltParser._execute(command, verbose)
@@ -116,3 +150,6 @@ class MaltParser(ParserI):
         output = None if verbose else subprocess.PIPE
         p = subprocess.Popen(cmd, stdout=output, stderr=output)
         return p.wait()
+
+    def grammar(self):
+        pass

@@ -2,10 +2,9 @@ from inco.pln.utils.dot_language_converter import DotLanguageConverter
 
 __author__ = 'Matias'
 
-import random
 import unittest
 from nltk import Tree
-from inco.pln.utils import dot_language_converter
+
 
 class TestConversionFunctions(unittest.TestCase):
 
@@ -18,15 +17,23 @@ class TestConversionFunctions(unittest.TestCase):
         str = converter.convert(sample_tree)
 
         expected_tree_string = ("digraph parse_tree {\n"
-                         "\tS -> NP;\n"
-                         "\tNP -> I;\n"
-                         "\tS -> VP;\n"
-                         "\tVP -> V;\n"
-                         "\tV -> saw;\n"
-                         "\tVP -> NP;\n"
-                         "\tNP -> him;\n"
-                         "}"
-        )
+                                "\t\"S\" [label=\"S\"];\n"
+                                "\t\"NP\" [label=\"NP\"];\n"
+                                "\t\"S\"-> \"NP\";\n"
+                                "\t\"I\" [label=\"I\"];\n"
+                                "\t\"NP\"-> \"I\";\n"
+                                "\t\"VP\" [label=\"VP\"];\n"
+                                "\t\"S\"-> \"VP\";\n"
+                                "\t\"V\" [label=\"V\"];\n"
+                                "\t\"VP\"-> \"V\";\n"
+                                "\t\"saw\" [label=\"saw\"];\n"
+                                "\t\"V\"-> \"saw\";\n"
+                                "\t\"NP_1\" [label=\"NP\"];\n"
+                                "\t\"VP\"-> \"NP_1\";\n"
+                                "\t\"him\" [label=\"him\"];\n"
+                                "\t\"NP_1\"-> \"him\";\n"
+                                "}")
+
 
         self.assertEqual(str, expected_tree_string)
 

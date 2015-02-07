@@ -15,7 +15,7 @@ class FreeLing(TaggerI, FreeLingBase):
     FreeLing tagger wrapper
     """
 
-    def __init__(self, path_to_tagger, verbose=False):
+    def __init__(self, path_to_tagger=None, verbose=False):
         """
         Constructor.
 
@@ -24,8 +24,24 @@ class FreeLing(TaggerI, FreeLingBase):
         :param verbose: indicates if additional information should be outputted
         :type verbose: bool
         """
-        self.is_full = False
         self._initialize(path_to_tagger, verbose)
+        self.__processor = FreeLing.__process_native
+
+    @staticmethod
+    def __process_full(tagged_dict):
+        # todo: add each dictionary directly...
+        return dict([(constants.WORD, tagged_dict[constants.WORD]),
+                     (constants.LEMMA, tagged_dict[constants.LEMMA]),
+                     (constants.COARSE_TAG, tagged_dict[constants.COARSE_TAG]),
+                     (constants.POS_TAG, tagged_dict[constants.POS_TAG]),
+                     (constants.FEATURES, dict([
+                         (constants.TAGGER, constants.TAGGERS_FREELING),
+                         (constants.PROBABILITY, tagged_dict[constants.PROBABILITY])
+                     ]))])
+
+    @staticmethod
+    def __process_native(tagged_dict):
+        return tagged_dict[constants.WORD], tagged_dict[constants.POS_TAG]
 
     def process_output(self, file_path):
         """
@@ -46,27 +62,9 @@ class FreeLing(TaggerI, FreeLingBase):
 
                 if line != "\n":
                     converted_line = FreeLing.__convert_line(line)
-
-                    # todo: add each dictionary directly...
-                    if self.is_full:
-                        # in full mode is where the most information on a token is provided
-                        result.append(dict([(constants.WORD, converted_line[constants.WORD]),
-                                            (constants.LEMMA, converted_line[constants.LEMMA]),
-                                            (constants.COARSE_TAG, converted_line[constants.COARSE_TAG]),
-                                            (constants.POS_TAG, converted_line[constants.POS_TAG]),
-                                            (constants.FEATURES, dict([
-                                                (constants.TAGGER, constants.TAGGERS_FREELING),
-                                                (constants.PROBABILITY, converted_line[constants.PROBABILITY])
-                                            ]))]))
-                    else:
-                        # in standard mode, only the word and tags are provided for each token.
-                        result.append(dict([(constants.WORD, converted_line[constants.WORD]),
-                                            (constants.ORIGINAL_TAG, converted_line[constants.ORIGINAL_TAG])]))
+                    result.append(self.__processor(converted_line))
 
         return result
-
-    def get_type(self):
-        return FreeLingBase._type_tagger
 
     def tag(self, tokens):
         """
@@ -75,10 +73,14 @@ class FreeLing(TaggerI, FreeLingBase):
         :param tokens: the collection of tokens to POS tag.
         :type tokens: list(str)
         :return: the collection of tokens, POS tagged. Each entry contains: WORD POS-TAG
-        :rtype: list(dict)
+        :rtype: list(tuple(str, str))
         """
         string = "\n".join(tokens)
-        return self.execute(string, True)
+        self.__processor = FreeLing.__process_native
+        return self.execute(string, self._format_type_tokenized, self._format_type_tagged)
+
+    def native_tag(self, tokens):
+        return self.tag(tokens)
 
     def tag_full(self, tokens):
         """
@@ -90,9 +92,13 @@ class FreeLing(TaggerI, FreeLingBase):
         :rtype: list(dict)
         """
 
-        self.is_full = True
+        self.__processor = FreeLing.__process_full
         string = "\n".join(tokens)
-        return self.execute(string, True)
+        return self.execute(string, self._format_type_tokenized, self._format_type_tagged)
+
+    def raw_tag(self, sent):
+        self.__processor = FreeLing.__process_native
+        return self.execute(sent, self._format_type_plain, self._format_type_tagged)
 
     def tag_string_full(self, string):
         """
@@ -104,9 +110,8 @@ class FreeLing(TaggerI, FreeLingBase):
         :rtype: list(dict)
         """
 
-        self.is_full = True
-
-        return self.execute(string, False)
+        self.__processor = FreeLing.__process_full
+        return self.execute(string, self._format_type_plain, self._format_type_tagged)
 
     @staticmethod
     def __convert_line(input_line):
@@ -139,3 +144,14 @@ class FreeLing(TaggerI, FreeLingBase):
                          constants.PROBABILITY: parsed_line.group(4)}
 
         return result_object
+
+
+def demo():
+    freeling = FreeLing()
+    tagged = freeling.raw_tag(u"En el tramo de Telefónica, un toro descolgado ha creado peligro "
+                              u"tras embestir contra un grupo de mozos.")
+    print tagged
+
+
+if __name__ == '__main__':
+    demo()

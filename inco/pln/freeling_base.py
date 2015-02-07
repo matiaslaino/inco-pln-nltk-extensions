@@ -19,18 +19,20 @@ class FreeLingBase:
 
         self.verbose = verbose
         self.path_to_tagger = path_to_tagger
-        if not os.path.isfile(path_to_tagger):
+
+        if self.path_to_tagger is None:
+            self.path_to_tagger = os.environ['NLP_NLTKEXT_FREELING']
+
+        if not os.path.isfile(self.path_to_tagger):
             raise Exception("FreeLing executable not found")
 
-    def execute(self, input_str, input_is_tokenized=False):
+    def execute(self, input_str, input_format, output_format):
         """
         Invokes FreeLing.
 
         :param input_str: text upon which to invoke FreeLing.
         :type input_str: str
-        :param input_is_tokenized: indicates if input string is already tokenized.
-        :type input_is_tokenized: bool
-        :return: FreeLing's output, if successful.
+        :return: FreeLing\'s output, if successful.
         :rtype: str
         """
 
@@ -58,7 +60,7 @@ class FreeLingBase:
 
         # call the binary
         # todo: handle binary fail (res != 0)
-        self.__execute_binary(self.path_to_tagger, input_name, output_name, input_is_tokenized)
+        self.__execute_binary(self.path_to_tagger, input_name, output_name, input_format, output_format)
 
         if self.verbose:
             print "--- Processing FreeLing's output ---"
@@ -75,7 +77,7 @@ class FreeLingBase:
 
         return result
 
-    def __execute_binary(self, tagger_path, input_file_path, output_file_path, input_is_tokenized=False):
+    def __execute_binary(self, tagger_path, input_file_path, output_file_path, input_format, output_format):
         """
         Executes FreeLing on an input file, and writes the output in another file.
         :param tagger_path:
@@ -109,23 +111,9 @@ class FreeLingBase:
         if self.verbose:
             print "Configuration path: <" + bin_path + ">"
 
-        # the expected output depends on the derived class.
-        # todo: this could be a parameter.
-        if self.get_type() == FreeLingBase._type_parser:
-            output_format_flag = 'parsed'
-        elif self.get_type() == FreeLingBase._type_tagger:
-            output_format_flag = 'tagged'
-        else:
-            output_format_flag = 'token'
-
-        if input_is_tokenized:
-            input_format_flag = 'token'
-        else:
-            input_format_flag = 'plain'
-
         # assemble execution string
-        execution_string += " -f {0} --lang es --inpf {1} --outf {2}".format(cfg_path, input_format_flag,
-                                                                             output_format_flag)
+        execution_string += " -f {0} --lang es --inpf {1} --outf {2}".format(cfg_path, input_format,
+                                                                             output_format)
 
         execution_string += " <" + input_file_path
         execution_string += " >" + output_file_path
@@ -143,3 +131,9 @@ class FreeLingBase:
     _type_tokenizer = 'tokenizer'
     _type_parser = 'parser'
     _type_tagger = 'tagger'
+
+    _format_type_plain = 'plain'
+    _format_type_tokenized = 'token'
+    _format_type_tagged = 'tagged'
+    _format_type_parsed = 'parsed'
+

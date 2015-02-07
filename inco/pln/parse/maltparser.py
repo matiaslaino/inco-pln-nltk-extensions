@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 import codecs
-import json
 import subprocess
 import tempfile
 import os
 
-from nltk import ParserI
+from nltk import ParserI, word_tokenize, TaggerI
 
 from inco.pln.parse.tree.maltparser_tree_builder import MaltParserTreeBuilder
-import inco.pln.tagging_constants as constants
 
 
 __author__ = 'Matias'
@@ -19,7 +17,7 @@ class MaltParser(ParserI):
     MaltParser wrapper.
     """
 
-    def __init__(self, path_to_jar, path_to_model):
+    def __init__(self, path_to_jar=None, path_to_model=None, tagger=None):
         """
         Constructor.
 
@@ -27,56 +25,68 @@ class MaltParser(ParserI):
         :type path_to_jar: str
         :param path_to_model: path to the MaltParser model file (.mco).
         :type path_to_model: str
+        :type tagger: nltk.tag.TaggerI
         :raise Exception: if MaltParser JAR or model files are not found.
         """
 
         self.path_to_model = path_to_model
         self.path_to_jar = path_to_jar
 
-        if not os.path.isfile(path_to_jar):
-            raise Exception("No se encuentra JAR de MaltParser.")
-        if not os.path.isfile(path_to_model):
-            raise Exception("No se encuentra modelo para el Español de MaltParser.")
+        if self.path_to_jar is None:
+            self.path_to_jar = os.environ['NLP_NLTKEXT_MALTPARSER_JAR']
 
-    def parse(self, input_str, verbose=False):
+        if self.path_to_model is None:
+            self.path_to_model = os.environ['NLP_NLTKEXT_MALTPARSER_MODEL']
+
+        """:type : nltk.tag.TaggerI"""
+        self.tagger = tagger
+
+        if not os.path.isfile(self.path_to_jar):
+            raise Exception("MaltParser JAR not found.")
+        if not os.path.isfile(self.path_to_model):
+            raise Exception("MaltParser model file not found")
+
+    def raw_parse(self, sent):
         """
-        Entry point for MaltParser.
-        Converts the input string, from our own format, to the expected format of MaltParser.
 
-        :param input_str: input string
-        :type input_str: str
-        :param verbose: indicate if additional output will be sent to standard output.
-        :return: the processed parse tree.
-        :rtype: nltk.tree.Tree
+        :param sent:
+        :type sent:str
+        :return:
         """
 
-        # the expected MaltParser format is:
-        # token_number TAB word TAB lemma TAB coarse_tag TAB pos_tag TAB _ TAB _ TAB _ TAB _ TAB _
-        # our internal format is a dictionary saved as json.
+        tokens = word_tokenize(sent)
+        return self.parse(tokens)
 
-        utf8_line = input_str.decode('utf8')
-        line = json.loads(utf8_line)
+    def parse(self, sent):
+        """
 
-        i = 1
+        :param sent:
+        :type sent:list(str)
+        :return:
+        """
+
+        if self.tagger is None or type(self.tagger) != TaggerI:
+            raise Exception("Tagger not set, cannot parse raw tokens without their tags")
+
+        tagged_sent = self.tagger.tag(sent)
+        return self.tagged_parse(tagged_sent)
+
+    def tagged_parse(self, sent, verbose=False):
+        """
+
+        :param sent:
+        :type sent:list(tuple(str, str))
+        :return:
+        """
 
         str_result = u''
+        i = 1
+        for item in sent:
+            word = item[0]
+            tag = item[1]
 
-        if verbose:
-            print "--- Processing input ---"
-
-        try:
-            for word_dict in line:
-                str_result += u"{}\t{}\t{}\t{}\t{}\t_\t_\t_\t_\t_\n".format(repr(i), word_dict[constants.WORD],
-                                                                            word_dict[constants.LEMMA],
-                                                                            word_dict[constants.COARSE_TAG],
-                                                                            word_dict[constants.POS_TAG])
-                i += 1
-        except KeyError, e:
-            print e
-            exit()
-
-        if verbose:
-            print "--- Creating temporal files ---"
+            str_result += u"{}\t{}\t{}\t{}\t{}\t_\t_\t_\t_\t_\n".format(repr(i), word, "_", tag, tag)
+            i += 1
 
         temp_input = tempfile.NamedTemporaryFile(delete=False)
         temp_output = tempfile.NamedTemporaryFile(delete=False)
@@ -143,13 +153,30 @@ class MaltParser(ParserI):
             print "Execution string: <" + command + ">"
 
         # print command
-        return MaltParser._execute(command, verbose)
+        return MaltParser.__execute_binary(command, verbose)
 
     @staticmethod
-    def _execute(cmd, verbose=False):
+    def __execute_binary(cmd, verbose=False):
         output = None if verbose else subprocess.PIPE
         p = subprocess.Popen(cmd, stdout=output, stderr=output)
         return p.wait()
 
     def grammar(self):
         pass
+
+
+def demo():
+    # previously tagged by FreeLing
+    tokens = [(u'En', u'SPS00'), (u'el', u'DA0MS0'), (u'tramo', u'NCMS000'), (u'de', u'SPS00'),
+              (u'Telef\xf3nica', u'NP00000'), (u',', u'Fc'), (u'un', u'DI0MS0'),
+              (u'toro', u'NCMS000'), (u'descolgado', u'VMP00SM'), (u'ha', u'VAIP3S0'),
+              (u'creado', u'VMP00SM'), (u'peligro', u'NCMS000'), (u'tras', u'SPS00'),
+              (u'embestir', u'VMN0000'), (u'contra', u'SPS00'), (u'un', u'DI0MS0'),
+              (u'grupo', u'NCMS000'), (u'de', u'SPS00'), (u'mozos', u'NCMP000'), (u'.', u'Fp')]
+
+    parser = MaltParser()
+    parser.tagged_parse(tokens).draw()
+
+
+if __name__ == '__main__':
+    demo()

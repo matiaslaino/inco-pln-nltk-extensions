@@ -36,7 +36,7 @@ class FreeLing(FreeLingBase, TokenizerI):
 
         # hack: add two newlines to prevent FreeLing from repeating output...
         string += "\n\n"
-        return self.execute(string, False)
+        return self.execute(string, self._format_type_plain, self._format_type_tokenized)
 
     def process_output(self, file_path):
         """
@@ -60,6 +60,3 @@ class FreeLing(FreeLingBase, TokenizerI):
                     print line
 
         return result
-
-    def get_type(self):
-        return FreeLingBase._type_tokenizer

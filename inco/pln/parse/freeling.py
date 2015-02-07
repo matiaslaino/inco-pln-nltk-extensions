@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import codecs
-import json
 
 from nltk import ParserI
 
 from inco.pln.freeling_base import FreeLingBase
-import inco.pln.tagging_constants as constants
 from inco.pln.parse.tree.freeling_tree_builder import FreeLingTreeBuilder
 
 
@@ -15,9 +13,11 @@ __author__ = 'Matias'
 class FreeLing(FreeLingBase, ParserI):
     """
     FreeLing parser wrapper.
+
+    EAGLES tagset
     """
 
-    def __init__(self, path_to_tagger, verbose=False):
+    def __init__(self, path_to_tagger=None, verbose=False):
         """
         Constructor.
         :param path_to_tagger: path to the FreeLing executable.
@@ -54,50 +54,59 @@ class FreeLing(FreeLingBase, ParserI):
 
         return tree
 
-    def get_type(self):
-        return FreeLingBase._type_parser
-
-    def parse(self, input_str, verbose=False):
+    def parse(self, sent):
         """
-        Entry point for the FreeLing parser.
-        Converts the input string, from our own format, to the expected format of FreeLing.
+        :param sent:
+        :type sent: list(str)
+        :rtype: iter(Tree)
+        """
 
-        :param input_str: input string
-        :type input_str: str
-        :param verbose: indicate if additional output will be sent to standard output.
+        formatted_str = "\n".join(sent)
+
+        tree = self.execute(formatted_str, self._format_type_tokenized, self._format_type_parsed)
+
+        return [tree]
+
+    def raw_parse(self, sent):
+        """
+        :param sent:
+        :type sent: str
+        :rtype: iter(Tree)
+        """
+
+        tree = self.execute(sent, self._format_type_plain, self._format_type_parsed)
+
+        return [tree]
+
+    def tagged_parse(self, sent, verbose=False):
+        """
+
+        :param sent: input sentence
+        :type sent: list(tuple(str, str))
         :return: the processed parse tree.
         :rtype: nltk.tree.Tree
         """
 
         # the expected FreeLing format is:
         # word TAB lemma TAB pos_tag
-        # our internal format is a dictionary saved as json.
 
-        utf8_line = input_str.decode('utf8')
-        line = json.loads(utf8_line)
+        formatted_str_list = map(lambda item: u"{} {} {}".format(item[0], item[0], item[1]), sent)
+        formatted_str = "\n".join(formatted_str_list)
 
-        str_result = u''
-
-        if verbose:
-            print "--- Processing input ---"
-
-        try:
-            for word_dict in line:
-                if verbose:
-                    print "raw line: " + line
-
-                str_result += u"{} {} {}\n".format(word_dict[constants.WORD], word_dict[constants.LEMMA],
-                                                   word_dict[constants.POS_TAG])
-        except KeyError, e:
-            print e
-            exit()
-
-        if verbose:
-            print "result: " + str_result
-
-        tree = self.execute(str_result, True)
+        tree = self.execute(formatted_str, self._format_type_tagged, self._format_type_parsed)
 
         return tree
 
     def grammar(self):
         raise NotImplementedError()
+
+
+def demo():
+    freeling = FreeLing()
+    tree = freeling.raw_parse(u"En el tramo de Telefónica, un toro descolgado ha creado peligro "
+                              u"tras embestir contra un grupo de mozos.")
+    tree[0].draw()
+
+
+if __name__ == '__main__':
+    demo()

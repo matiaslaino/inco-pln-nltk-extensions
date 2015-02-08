@@ -5,6 +5,7 @@ import ttk
 
 from nltk import Tree
 
+import inco.pln.tag.freeling
 from inco.pln.parse.freeling import FreeLing
 from inco.pln.parse.maltparser import MaltParser
 from inco.pln.utils.dot_language_converter import DotLanguageConverter
@@ -48,13 +49,13 @@ class ControlParse:
             return
 
         string = self.input_text_area.get("1.0", END)
-        string = string.rstrip()
-        string = "[" + string + "]"
-        string = string.replace("\n", ",")
+        # string = string.rstrip()
+        # string = "[" + string + "]"
+        # string = string.replace("\n", ",")
 
         parser = FreeLing(freeling_path)
 
-        tree = parser.parse(string)
+        tree = parser.raw_parse(string)[0]
 
         self.output_text_area.delete(1.0, END)
 
@@ -65,6 +66,7 @@ class ControlParse:
     def __parse_with_maltparser(self):
         parser_path = ConfigurationManager.load()['maltparser_path']
         parser_model_path = ConfigurationManager.load()['maltparser_model_path']
+        freeling_path = ConfigurationManager.load()['freeling_path']
 
         if parser_path is None:
             tkMessageBox.showerror(message='Path to MaltParse not set')
@@ -74,14 +76,20 @@ class ControlParse:
             tkMessageBox.showerror(message='Path to MaltParser model not set')
             return
 
+        if freeling_path is None:
+            tkMessageBox.showerror(message='Path to FreeLing not set')
+            return
+
         string = self.input_text_area.get("1.0", END)
-        string = string.rstrip()
-        string = "[" + string + "]"
-        string = string.replace("\n", ",")
+        # string = string.rstrip()
+        # string = "[" + string + "]"
+        # string = string.replace("\n", ",")
 
-        parser = MaltParser(parser_path, parser_model_path)
+        tagger = inco.pln.tag.freeling.FreeLing(freeling_path)
 
-        tree = parser.parse(string)
+        parser = MaltParser(parser_path, parser_model_path, tagger=tagger)
+
+        tree = parser.raw_parse(string)[0]
 
         tree_str = str(tree)
 

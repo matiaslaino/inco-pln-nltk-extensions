@@ -5,7 +5,7 @@ import tkMessageBox
 import ttk
 
 from inco.pln.tag.freeling import FreeLing
-from inco.pln.tag.treetagger import TreeTagger
+from inco.pln.tag.treetagger.treetagger import TreeTagger
 from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
 
 
@@ -43,7 +43,7 @@ class ControlTag:
         string = self.input_text_area.get("1.0", END)
         tokenizer = FreeLing(freeling_path)
 
-        tokens_dict = tokenizer.tag_string_full(string)
+        tokens_dict = tokenizer.raw_tag_full(string)
 
         tokens_dict_array = [json.dumps(x) for x in tokens_dict]
 
@@ -66,7 +66,7 @@ class ControlTag:
         string = self.input_text_area.get("1.0", END)
         tokenizer = TreeTagger(path)
 
-        tokens_dict = tokenizer.tag_string_full(string)
+        tokens_dict = tokenizer.raw_tag_full(string)
 
         tokens_dict_array = [str(x) for x in tokens_dict]
 

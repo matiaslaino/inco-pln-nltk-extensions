@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 from nltk import TaggerI, word_tokenize
+from nltk.tokenize.api import TokenizerI
 
 from inco.pln.tag.treetagger.tag_converter import Converter
 
@@ -18,12 +19,13 @@ class TreeTagger(TaggerI):
     TreeTagger wrapper
     """
 
-    def __init__(self, path_to_tagger=None):
+    def __init__(self, path_to_tagger=None, tokenizer=None):
         """
         Constructor.
 
         :param path_to_tagger: path to binary
         :type path_to_tagger: str
+        :type tokenizer: TokenizerI
         """
 
         self.tagger_path = path_to_tagger
@@ -34,6 +36,8 @@ class TreeTagger(TaggerI):
         self.__processor = TreeTagger.__process
         if not os.path.isfile(self.tagger_path):
             raise Exception("TreeTagger executable not found")
+
+        self.__tokenizer = tokenizer
 
     def tag(self, sent):
         """
@@ -54,16 +58,6 @@ class TreeTagger(TaggerI):
         self.__processor = TreeTagger.__process_native
         return self.__execute(string)
 
-    def raw_tag(self, sent):
-        """
-
-        :param sent:
-        :type sent:str
-        :return:
-        """
-        tokens = word_tokenize(sent)
-        return self.tag(tokens)
-
     def tag_full(self, sent):
         """
         Tags a collection of tokens.
@@ -78,9 +72,25 @@ class TreeTagger(TaggerI):
         self.__processor = TreeTagger.__process_full
         self.__execute(string)
 
-    def tag_string_full(self, string):
+    def raw_tag(self, sent):
         """
-        Tags a collection of tokens.
+
+        :param sent:
+        :type sent:str
+        :return:
+        """
+        if self.__tokenizer is not None:
+            tokens = self.__tokenizer.tokenize(sent)
+        else:
+            tokens = word_tokenize(sent)
+
+        string = "\n".join(sent)
+        self.__processor = TreeTagger.__process
+        return self.tag(string)
+
+    def raw_tag_full(self, string):
+        """
+        Tags a string.
 
         :param string: string to POS tag.
         :type string: str
@@ -88,6 +98,12 @@ class TreeTagger(TaggerI):
         :rtype: list(dict)
         """
 
+        if self.__tokenizer is not None:
+            tokens = self.__tokenizer.tokenize(string)
+        else:
+            tokens = word_tokenize(string)
+
+        string = "\n".join(tokens)
         self.__processor = TreeTagger.__process_full
         return self.__execute(string)
 

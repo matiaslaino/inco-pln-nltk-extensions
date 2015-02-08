@@ -100,7 +100,7 @@ class FreeLing(TaggerI, FreeLingBase):
         self.__processor = FreeLing.__process_native
         return self.execute(sent, self._format_type_plain, self._format_type_tagged)
 
-    def tag_string_full(self, string):
+    def raw_tag_full(self, string):
         """
         Tags a collection of tokens.
 

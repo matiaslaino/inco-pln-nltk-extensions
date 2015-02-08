@@ -65,7 +65,7 @@ class MaltParser(ParserI):
         :return:
         """
 
-        if self.tagger is None or type(self.tagger) != TaggerI:
+        if self.tagger is None or issubclass(type(self.tagger), TaggerI) is False:
             raise Exception("Tagger not set, cannot parse raw tokens without their tags")
 
         tagged_sent = self.tagger.tag(sent)

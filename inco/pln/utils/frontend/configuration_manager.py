@@ -17,9 +17,9 @@ class ConfigurationManager:
 
     @staticmethod
     def load():
-        settings_file = open(ConfigurationManager.settings_file_name, mode='r')
-
         try:
+            settings_file = open(ConfigurationManager.settings_file_name, mode='r')
+
             config = pickle.load(settings_file)
         except:
             config = {'freeling_path': '', 'treetagger_path': '',

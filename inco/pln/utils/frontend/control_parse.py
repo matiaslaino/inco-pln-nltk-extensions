@@ -1,9 +1,10 @@
-from Tkconstants import END, INSERT
+from Tkconstants import END, INSERT, W, E, S, N
 from Tkinter import Text
 import tkMessageBox
 import ttk
 
 from nltk import Tree
+from inco.pln.common import UIUtils
 
 import inco.pln.tag.freeling
 from inco.pln.parse.freeling import FreeLing
@@ -23,23 +24,36 @@ class ControlParse:
         self.parent = parent
         self.frame = ttk.Frame(parent)
 
-        ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=2)
-        self.input_text_area = Text(self.frame, height=15, width=100)
-        self.input_text_area.grid(row=1, column=0, columnspan=2)
+        columns = 4
 
-        ttk.Button(self.frame, text="Parse with FreeLing", command=self.__parse_with_freeling).grid(row=2, column=0)
-        ttk.Button(self.frame, text="Parse with MaltParser", command=self.__parse_with_maltparser).grid(row=2, column=1)
+        ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
+        self.input_text_area = Text(self.frame, width=100)
+        self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=N+S+E+W)
 
-        ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=2)
-        self.output_text_area = Text(self.frame, height=15, width=100)
-        self.output_text_area.grid(row=4, column=0, columnspan=2)
+        ttk.Button(self.frame, text="Parse with FreeLing", command=self.__parse_with_freeling).grid(row=2, column=1, sticky=N+S+E+W)
+        ttk.Button(self.frame, text="Parse with MaltParser", command=self.__parse_with_maltparser).grid(row=2, column=2, sticky=N+S+E+W)
 
-        ttk.Button(self.frame, text="To DOT Language", command=self.__to_dot).grid(row=5, column=0)
-        ttk.Button(self.frame, text="Render tree with NLTK", command=self.__render_tree).grid(row=5, column=1)
+        ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
+        self.output_text_area = Text(self.frame, width=100)
+        self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=N+S+E+W)
 
-        self.output_dot_text_area = Text(self.frame, height=15, width=100)
-        self.output_dot_text_area.grid(row=6, column=0, columnspan=2)
+        ttk.Button(self.frame, text="To DOT Language", command=self.__to_dot).grid(row=5, column=1, sticky=N+S+E+W)
+        ttk.Button(self.frame, text="Render tree with NLTK", command=self.__render_tree).grid(row=5, column=2, sticky=N+S+E+W)
 
+        self.output_dot_text_area = Text(self.frame, width=100)
+        self.output_dot_text_area.grid(row=6, column=0, columnspan=columns, sticky=N+S+E+W)
+
+        self.frame.grid_columnconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(1, weight=1)
+        self.frame.grid_columnconfigure(2, weight=1)
+        self.frame.grid_columnconfigure(3, weight=1)
+        self.frame.grid_rowconfigure(1, weight=1)
+        self.frame.grid_rowconfigure(4, weight=1)
+        self.frame.grid_rowconfigure(6, weight=1)
+
+        UIUtils.set_vertical_scroll(self.input_text_area)
+        UIUtils.set_vertical_scroll(self.output_text_area)
+        UIUtils.set_vertical_scroll(self.output_dot_text_area)
 
     def __parse_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']

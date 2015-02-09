@@ -1,8 +1,9 @@
-from Tkconstants import END, INSERT
-from Tkinter import Text
+from Tkconstants import END, INSERT, E, W, S, N, BOTH, LEFT
+from Tkinter import Text, Tk
 import json
 import tkMessageBox
 import ttk
+from inco.pln.common import UIUtils
 
 from inco.pln.tag.freeling import FreeLing
 from inco.pln.tag.treetagger.treetagger import TreeTagger
@@ -19,19 +20,32 @@ class ControlTag:
     def __init__(self, parent):
         self.parent = parent
         self.frame = ttk.Frame(parent)
+        self.frame.grid_columnconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(1, weight=1)
+        self.frame.grid_columnconfigure(2, weight=1)
+        self.frame.grid_columnconfigure(3, weight=1)
+        self.frame.grid_rowconfigure(1, weight=1)
+        self.frame.grid_rowconfigure(4, weight=1)
 
-        ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=2)
-        self.input_text_area = Text(self.frame, height=15, width=100)
-        self.input_text_area.grid(row=1, column=0, columnspan=2)
+        # self.frame
+        columns = 4
+        #
+        ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
+        self.input_text_area = Text(self.frame, height=10)
+        self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=W+E+S+N)
 
-        ttk.Button(self.frame, text="Tag with FreeLing", command=self.__tag_with_freeling).grid(row=2, column=0)
-        ttk.Button(self.frame, text="Tag with TreeTagger", command=self.__tag_with_treetagger).grid(row=2, column=1)
+        ttk.Button(self.frame, text="Tag with FreeLing", command=self.__tag_with_freeling)\
+            .grid(row=2, column=1, sticky=N+W+S+E)
+        ttk.Button(self.frame, text="Tag with TreeTagger", command=self.__tag_with_treetagger)\
+            .grid(row=2, column=2, sticky=N+W+S+E)
 
-        ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=2)
-        self.output_text_area = Text(self.frame, height=15, width=100)
-        self.output_text_area.grid(row=4, column=0, columnspan=2)
+        ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
+        self.output_text_area = Text(self.frame, height=10)
+        self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=W+E+S+N)
         self.output_text_area['state'] = 'disabled'
 
+        UIUtils.set_vertical_scroll(self.input_text_area)
+        UIUtils.set_vertical_scroll(self.output_text_area)
 
     def __tag_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']

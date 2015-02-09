@@ -1,8 +1,9 @@
-from Tkconstants import END, INSERT
+from Tkconstants import END, INSERT, BOTH
 from Tkinter import Text
+import Tkinter as tk
 import tkMessageBox
-import ttk
 
+from inco.pln.common import UIUtils
 from inco.pln.tokenize.freeling import FreeLing
 from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
 
@@ -16,19 +17,25 @@ class ControlTokenize:
 
     def __init__(self, parent):
         self.parent = parent
-        self.frame = ttk.Frame(parent)
+        self.frame = tk.Frame(parent)
 
-        ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=2)
-        self.input_text_area = Text(self.frame, height=15, width=100)
-        self.input_text_area.grid(row=1, column=0, columnspan=2)
-
-        ttk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling).grid(row=2,
-                                                                                                          column=0)
-
-        ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=2)
-        self.output_text_area = Text(self.frame, height=15, width=100)
-        self.output_text_area.grid(row=4, column=0, columnspan=2)
+        tk.Label(self.frame, text="Input").pack()
+        self.input_text_area = Text(self.frame, height=10, width=100)
+        self.input_text_area.pack(fill=BOTH, expand=True)
+        tk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling).pack()
+        tk.Label(self.frame, text="Output").pack()
+        self.output_text_area = Text(self.frame, height=10, width=100)
+        self.output_text_area.pack(fill=BOTH, expand=True)
         self.output_text_area['state'] = 'disabled'
+
+        # scroll = Scrollbar(self.input_text_area)
+        # scroll.config(command=self.input_text_area.yview)
+        # self.input_text_area.config(yscrollcommand=scroll.set)
+        # scroll.pack(side=RIGHT, fill=Y)
+
+        UIUtils.set_vertical_scroll(self.input_text_area)
+        UIUtils.set_vertical_scroll(self.output_text_area)
+
 
     def __tokenize_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']

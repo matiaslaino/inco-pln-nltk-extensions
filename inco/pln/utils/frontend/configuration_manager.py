@@ -22,7 +22,7 @@ class ConfigurationManager:
 
             config = pickle.load(settings_file)
         except:
-            config = {'freeling_path': '', 'treetagger_path': '',
-                      'maltparser_path': '', 'maltparser_model_path': ''}
+            config = {'freeling_path': None, 'treetagger_path': None,
+                      'maltparser_path': None, 'maltparser_model_path': None}
 
         return config

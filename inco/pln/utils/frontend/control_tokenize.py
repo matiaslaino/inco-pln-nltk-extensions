@@ -40,10 +40,6 @@ class ControlTokenize:
     def __tokenize_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']
 
-        if freeling_path is None:
-            tkMessageBox.showerror(message='Path to FreeLing not set')
-            return
-
         string = self.input_text_area.get("1.0", END)
         tokenizer = FreeLing(freeling_path)
 

@@ -127,7 +127,7 @@ class MaltParser(ParserI):
         tree_builder = MaltParserTreeBuilder()
         tree = tree_builder.build(parse_tree_str)
 
-        return tree
+        return [tree]
 
     def __execute(self, input_file_path, output_file_path, verbose=False):
         """
@@ -175,7 +175,7 @@ def demo():
               (u'grupo', u'NCMS000'), (u'de', u'SPS00'), (u'mozos', u'NCMP000'), (u'.', u'Fp')]
 
     parser = MaltParser()
-    parser.tagged_parse(tokens).draw()
+    parser.tagged_parse(tokens)[0].draw()
 
 
 if __name__ == '__main__':

@@ -58,10 +58,6 @@ class ControlParse:
     def __parse_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']
 
-        if freeling_path is None:
-            tkMessageBox.showerror(message='Path to FreeLing not set')
-            return
-
         string = self.input_text_area.get("1.0", END)
         # string = string.rstrip()
         # string = "[" + string + "]"
@@ -81,18 +77,6 @@ class ControlParse:
         parser_path = ConfigurationManager.load()['maltparser_path']
         parser_model_path = ConfigurationManager.load()['maltparser_model_path']
         freeling_path = ConfigurationManager.load()['freeling_path']
-
-        if parser_path is None:
-            tkMessageBox.showerror(message='Path to MaltParse not set')
-            return
-
-        if parser_model_path is None:
-            tkMessageBox.showerror(message='Path to MaltParser model not set')
-            return
-
-        if freeling_path is None:
-            tkMessageBox.showerror(message='Path to FreeLing not set')
-            return
 
         string = self.input_text_area.get("1.0", END)
         # string = string.rstrip()

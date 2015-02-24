@@ -1,4 +1,4 @@
-from Tkconstants import END, INSERT, E, W, S, N, BOTH, LEFT
+from Tkconstants import END, INSERT, E, W, S, N, BOTH, LEFT, HORIZONTAL
 from Tkinter import Text, Tk
 import json
 import tkMessageBox
@@ -50,10 +50,6 @@ class ControlTag:
     def __tag_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']
 
-        if freeling_path is None:
-            tkMessageBox.showerror(message='Path to FreeLing not set')
-            return
-
         string = self.input_text_area.get("1.0", END)
         tokenizer = FreeLing(freeling_path)
 
@@ -72,10 +68,6 @@ class ControlTag:
 
     def __tag_with_treetagger(self):
         path = ConfigurationManager.load()['treetagger_path']
-
-        if path is None:
-            tkMessageBox.showerror(message='Path to TreeTagger not set')
-            return
 
         string = self.input_text_area.get("1.0", END)
         tokenizer = TreeTagger(path)

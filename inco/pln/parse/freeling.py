@@ -95,7 +95,7 @@ class FreeLing(FreeLingBase, ParserI):
 
         tree = self.execute(formatted_str, self._format_type_tagged, self._format_type_parsed)
 
-        return tree
+        return [tree]
 
     def grammar(self):
         raise NotImplementedError()

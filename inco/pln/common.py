@@ -1,6 +1,7 @@
 from Tkconstants import RIGHT
 from Tkconstants import Y
 import Tkinter as tk
+import threading
 
 __author__ = 'Matias'
 

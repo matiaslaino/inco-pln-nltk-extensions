@@ -24,7 +24,4 @@ n.add(ControlTag(n).frame, text='Tag')
 n.add(ControlParse(n).frame, text='Parse')
 n.pack(expand=True, fill=BOTH)
 
-#2B2B2B
-
-
 root.mainloop()

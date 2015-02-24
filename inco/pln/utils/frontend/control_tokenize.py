@@ -1,6 +1,7 @@
 from Tkconstants import END, INSERT, BOTH
 from Tkinter import Text
 import Tkinter as tk
+import ttk
 import tkMessageBox
 
 from inco.pln.common import UIUtils
@@ -19,11 +20,11 @@ class ControlTokenize:
         self.parent = parent
         self.frame = tk.Frame(parent)
 
-        tk.Label(self.frame, text="Input").pack()
+        ttk.Label(self.frame, text="Input").pack()
         self.input_text_area = Text(self.frame, height=10, width=100)
         self.input_text_area.pack(fill=BOTH, expand=True)
-        tk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling).pack()
-        tk.Label(self.frame, text="Output").pack()
+        ttk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling).pack()
+        ttk.Label(self.frame, text="Output").pack()
         self.output_text_area = Text(self.frame, height=10, width=100)
         self.output_text_area.pack(fill=BOTH, expand=True)
         self.output_text_area['state'] = 'disabled'

@@ -157,12 +157,17 @@ class StanfordShiftReduceParser(ParserI):
         return p.wait()
 
 # previously tagged by FreeLing
-tokens = [(u'En', u'SPS00'), (u'el', u'DA0MS0'), (u'tramo', u'NCMS000'), (u'de', u'SPS00'),
+
+def demo():
+    tokens = [(u'En', u'SPS00'), (u'el', u'DA0MS0'), (u'tramo', u'NCMS000'), (u'de', u'SPS00'),
           (u'Telef\xf3nica', u'NP00000'), (u',', u'Fc'), (u'un', u'DI0MS0'),
           (u'toro', u'NCMS000'), (u'descolgado', u'VMP00SM'), (u'ha', u'VAIP3S0'),
           (u'creado', u'VMP00SM'), (u'peligro', u'NCMS000'), (u'tras', u'SPS00'),
           (u'embestir', u'VMN0000'), (u'contra', u'SPS00'), (u'un', u'DI0MS0'),
           (u'grupo', u'NCMS000'), (u'de', u'SPS00'), (u'mozos', u'NCMP000'), (u'.', u'Fp')]
 
-parser = StanfordShiftReduceParser()
-parser.tagged_parse(tokens, verbose=True).draw()
+    parser = StanfordShiftReduceParser()
+    parser.tagged_parse(tokens, verbose=True).draw()
+
+if __name__ == '__main__':
+    demo()

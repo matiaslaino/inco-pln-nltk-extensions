@@ -45,11 +45,27 @@ class MenuBar:
         control.grid(row=i, column=2)
         i += 1
 
-        label = Label(filewin, text="Spanish model")
+        label = Label(filewin, text="MaltParser Spanish model")
         label.grid(row=i, column=0)
-        entry_maltparser_model = Entry(filewin, width=100, textvariable=self.var_maltparser_model_path)
-        entry_maltparser_model.grid(row=i, column=1)
+        entry = Entry(filewin, width=100, textvariable=self.var_maltparser_model_path)
+        entry.grid(row=i, column=1)
         control = Button(filewin, text="Browse...", command=self.browse_maltparser_model)
+        control.grid(row=i, column=2)
+        i += 1
+
+        label = Label(filewin, text="Stanford Shift-Reduce")
+        label.grid(row=i, column=0)
+        entry = Entry(filewin, width=100, textvariable=self.var_stanfordsr_path)
+        entry.grid(row=i, column=1)
+        control = Button(filewin, text="Browse...", command=self.browse_stanfordsr)
+        control.grid(row=i, column=2)
+        i += 1
+
+        label = Label(filewin, text="Stanford SR Spanish model")
+        label.grid(row=i, column=0)
+        entry = Entry(filewin, width=100, textvariable=self.var_stanfordsr_model_path)
+        entry.grid(row=i, column=1)
+        control = Button(filewin, text="Browse...", command=self.browse_stanfordsr_model)
         control.grid(row=i, column=2)
         i += 1
 
@@ -63,11 +79,17 @@ class MenuBar:
             self.var_treetagger_path.set(settings['treetagger_path'])
             self.var_maltparser_path.set(settings['maltparser_path'])
             self.var_maltparser_model_path.set(settings['maltparser_model_path'])
+            self.var_stanfordsr_path.set(settings['stanfordsr_path'])
+            self.var_stanfordsr_model_path.set(settings['stanfordsr_model_path'])
 
     def __apply_configuration(self):
-        ConfigurationManager.save(self.var_freeling_path.get(), self.var_treetagger_path.get(),
+        ConfigurationManager.save(self.var_freeling_path.get(),
+                                  self.var_treetagger_path.get(),
                                   self.var_maltparser_path.get(),
-                                  self.var_maltparser_model_path.get())
+                                  self.var_maltparser_model_path.get(),
+                                  self.var_stanfordsr_path.get(),
+                                  self.var_stanfordsr_model_path.get(),
+        )
 
     def browse_freeling(self):
         filename = tkFileDialog.askopenfilename(filetypes=(("Windows executable files", "*.exe"),
@@ -86,11 +108,19 @@ class MenuBar:
                                                            ("All files", "*.*")))
         self.var_maltparser_model_path.set(filename)
 
-
     def browse_treetagger(self):
         filename = tkFileDialog.askopenfilename(filetypes=(("Batch files", "*.bat"),
                                                            ("All files", "*.*")))
         self.var_treetagger_path.set(filename)
+
+    def browse_stanfordsr(self):
+        filename = tkFileDialog.askopenfilename(filetypes=(("JAR files", "*.jar"),
+                                                           ("All files", "*.*")))
+        self.var_stanfordsr_path.set(filename)
+
+    def browse_stanfordsr_model(self):
+        filename = tkFileDialog.askopenfilename(filetypes=(("All files", "*.*")))
+        self.var_stanfordsr_model_path.set(filename)
 
     def __init__(self, parent):
         self.parent = parent
@@ -102,5 +132,7 @@ class MenuBar:
         self.var_maltparser_path = StringVar()
         self.var_maltparser_model_path = StringVar()
         self.var_treetagger_path = StringVar()
+        self.var_stanfordsr_model_path = StringVar()
+        self.var_stanfordsr_path = StringVar()
 
         parent.config(menu=menubar)

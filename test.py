@@ -51,7 +51,7 @@
 from nltk.parse.malt import MaltParser
 
 real_mp = MaltParser(mco="espmalt-1.0.mco",
-                     working_dir=r"C:\Users\Matias\Downloads\maltparser-1.8\maltparser-1.8\ModeloESP")
+                     working_dir=r"C:\\Users\\Matias\\Downloads\\maltparser-1.8\\maltparser-1.8\\")
 real_mp.config_malt(bin='C:\\Users\\Matias\\Downloads\\maltparser-1.8\\maltparser-1.8\\')
 parsed = real_mp.raw_parse("Hola, que tal?")
 

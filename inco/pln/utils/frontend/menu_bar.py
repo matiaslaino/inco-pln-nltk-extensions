@@ -1,4 +1,5 @@
 from Tkinter import Menu, Toplevel, StringVar
+import codecs
 import tkFileDialog
 from ttk import *
 
@@ -11,9 +12,12 @@ __author__ = 'Matias'
 class MenuBar:
     __settings_file_name = "config.txt"
 
+    read_delegate = None
+
     def open_configuration(self):
         filewin = Toplevel(self.parent)
         filewin.wm_title('Configuration')
+        filewin.wm_transient(self.parent)
 
         i = 0
 
@@ -82,6 +86,8 @@ class MenuBar:
             self.var_stanfordsr_path.set(settings['stanfordsr_path'])
             self.var_stanfordsr_model_path.set(settings['stanfordsr_model_path'])
 
+        self.read_delegate = None
+
     def __apply_configuration(self):
         ConfigurationManager.save(self.var_freeling_path.get(),
                                   self.var_treetagger_path.get(),
@@ -119,7 +125,7 @@ class MenuBar:
         self.var_stanfordsr_path.set(filename)
 
     def browse_stanfordsr_model(self):
-        filename = tkFileDialog.askopenfilename(filetypes=(("All files", "*.*")))
+        filename = tkFileDialog.askopenfilename()
         self.var_stanfordsr_model_path.set(filename)
 
     def __init__(self, parent):

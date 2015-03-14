@@ -1,10 +1,9 @@
-from Tkconstants import END, INSERT, E, W, S, N, BOTH, LEFT, HORIZONTAL
-from Tkinter import Text, Tk
+from Tkconstants import END, INSERT, E, W, S, N
+from Tkinter import Text
 import json
-import tkMessageBox
 import ttk
-from inco.pln.common import UIUtils
 
+from inco.pln.utils.frontend.ui_utils import UIUtils
 from inco.pln.tag.freeling import FreeLing
 from inco.pln.tag.treetagger.treetagger import TreeTagger
 from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
@@ -33,6 +32,9 @@ class ControlTag:
         ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
         self.input_text_area = Text(self.frame, height=10)
         self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=W+E+S+N)
+        ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
+            .grid(row=0, column=2, columnspan=2)
+
 
         ttk.Button(self.frame, text="Tag with FreeLing", command=self.__tag_with_freeling)\
             .grid(row=2, column=1, sticky=N+W+S+E)
@@ -84,3 +86,6 @@ class ControlTag:
         self.output_text_area.insert(INSERT, tokenized_string)
 
         self.output_text_area['state'] = 'disabled'
+
+    def __read_from_file(self):
+        UIUtils.read_from_file_to_input(self.input_text_area)

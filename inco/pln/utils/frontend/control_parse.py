@@ -1,13 +1,11 @@
 from Tkconstants import END, INSERT, W, E, S, N
 from Tkinter import Text
-import tkMessageBox
 import ttk
 
 from nltk import Tree
-from inco.pln.common import UIUtils
 
+from inco.pln.utils.frontend.ui_utils import UIUtils
 import inco.pln.tag.freeling
-
 from inco.pln.parse.stanford.stanford_shift_reduce import StanfordShiftReduceParser
 from inco.pln.parse.freeling import FreeLing
 from inco.pln.parse.maltparser import MaltParser
@@ -31,6 +29,8 @@ class ControlParse:
         ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
         self.input_text_area = Text(self.frame, width=100)
         self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=N+S+E+W)
+        ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
+            .grid(row=0, column=2, columnspan=2)
 
         ttk.Button(self.frame, text="Parse with FreeLing", command=self.__parse_with_freeling).grid(row=2, column=1, sticky=N+S+E+W)
         ttk.Button(self.frame, text="Parse with MaltParser", command=self.__parse_with_maltparser).grid(row=2, column=2, sticky=N+S+E+W)
@@ -141,3 +141,6 @@ class ControlParse:
         tree = Tree.fromstring(string)
 
         tree.draw()
+
+    def __read_from_file(self):
+        UIUtils.read_from_file_to_input(self.input_text_area)

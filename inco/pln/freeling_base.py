@@ -83,7 +83,6 @@ class FreeLingBase:
         :param tagger_path:
         :param input_file_path:
         :param output_file_path:
-        :param input_is_tokenized:
         :return: binary result code
         :rtype : int
 
@@ -136,4 +135,5 @@ class FreeLingBase:
     _format_type_tokenized = 'token'
     _format_type_tagged = 'tagged'
     _format_type_parsed = 'parsed'
+    _format_type_sense = 'sense'
 

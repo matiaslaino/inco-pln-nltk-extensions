@@ -1,10 +1,8 @@
-from Tkconstants import END, INSERT, BOTH
+from Tkconstants import END, INSERT, W, E, S, N
 from Tkinter import Text
-import Tkinter as tk
 import ttk
-import tkMessageBox
 
-from inco.pln.common import UIUtils
+from inco.pln.utils.frontend.ui_utils import UIUtils
 from inco.pln.tokenize.freeling import FreeLing
 from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
 
@@ -18,25 +16,33 @@ class ControlTokenize:
 
     def __init__(self, parent):
         self.parent = parent
-        self.frame = tk.Frame(parent)
+        self.frame = ttk.Frame(parent)
+        self.frame.grid_columnconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(1, weight=1)
+        self.frame.grid_columnconfigure(2, weight=1)
+        self.frame.grid_columnconfigure(3, weight=1)
+        self.frame.grid_rowconfigure(1, weight=1)
+        self.frame.grid_rowconfigure(4, weight=1)
 
-        ttk.Label(self.frame, text="Input").pack()
-        self.input_text_area = Text(self.frame, height=10, width=100)
-        self.input_text_area.pack(fill=BOTH, expand=True)
-        ttk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling).pack()
-        ttk.Label(self.frame, text="Output").pack()
-        self.output_text_area = Text(self.frame, height=10, width=100)
-        self.output_text_area.pack(fill=BOTH, expand=True)
+        # self.frame
+        columns = 4
+        #
+        ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
+        self.input_text_area = Text(self.frame, height=10)
+        self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=W+E+S+N)
+        ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
+            .grid(row=0, column=2, columnspan=2)
+
+        ttk.Button(self.frame, text="Tag with FreeLing", command=self.__tokenize_with_freeling)\
+            .grid(row=2, column=1, columnspan=2, sticky=N+W+S+E)
+
+        ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
+        self.output_text_area = Text(self.frame, height=10)
+        self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=W+E+S+N)
         self.output_text_area['state'] = 'disabled'
-
-        # scroll = Scrollbar(self.input_text_area)
-        # scroll.config(command=self.input_text_area.yview)
-        # self.input_text_area.config(yscrollcommand=scroll.set)
-        # scroll.pack(side=RIGHT, fill=Y)
 
         UIUtils.set_vertical_scroll(self.input_text_area)
         UIUtils.set_vertical_scroll(self.output_text_area)
-
 
     def __tokenize_with_freeling(self):
         freeling_path = ConfigurationManager.load()['freeling_path']
@@ -54,3 +60,6 @@ class ControlTokenize:
         self.output_text_area.insert(INSERT, tokenized_string)
 
         self.output_text_area['state'] = 'disabled'
+
+    def __read_from_file(self):
+        UIUtils.read_from_file_to_input(self.input_text_area)

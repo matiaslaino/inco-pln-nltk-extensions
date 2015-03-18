@@ -69,7 +69,9 @@ class FreeLingTreeBuilder():
                         is_inner = True
                     else:
                         # build leave
-                        tree_node = Tree(leaf_match.group(1), [])
+                        node_content = leaf_match.group(1)
+                        node_content = node_content.rstrip(' ').lstrip(' ').replace(' ', '_')
+                        tree_node = Tree(node_content, [])
                         is_inner = False
 
                     # this is a child of the last item on the stack, if any.

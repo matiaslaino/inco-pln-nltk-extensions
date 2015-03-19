@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 
-from nltk import ParserI
+from nltk import ParserI, TaggerI
 
 from inco.pln.freeling_base import FreeLingBase
 from inco.pln.parse.tree.freeling_tree_builder import FreeLingTreeBuilder
@@ -17,16 +17,18 @@ class FreeLing(FreeLingBase, ParserI):
     EAGLES tagset
     """
 
-    def __init__(self, path_to_tagger=None, verbose=False):
+    def __init__(self, path_to_tagger=None, verbose=False, tagger=None):
         """
         Constructor.
         :param path_to_tagger: path to the FreeLing executable.
         :type path_to_tagger: str
         :param verbose: indicates if additional information will be outputted to the standard output.
+        :type tagger: nltk.tag.TaggerI
         :type verbose: bool
         """
         self.is_full = False
         self._initialize(path_to_tagger, verbose)
+        self._tagger = tagger
 
     def process_output(self, file_path):
         """
@@ -63,7 +65,11 @@ class FreeLing(FreeLingBase, ParserI):
 
         formatted_str = "\n".join(sent)
 
-        tree = self.execute(formatted_str, self._format_type_tokenized, self._format_type_parsed)
+        if self._tagger is not None and issubclass(type(self._tagger), TaggerI):
+            tagged = self._tagger.tag(sent)
+            tree = self.tagged_parse(tagged)
+        else:
+            tree = self.execute(formatted_str, self._format_type_tokenized, self._format_type_parsed)
 
         return [tree]
 
@@ -74,9 +80,13 @@ class FreeLing(FreeLingBase, ParserI):
         :rtype: iter(Tree)
         """
 
-        tree = self.execute(sent, self._format_type_plain, self._format_type_parsed)
+        if self._tagger is not None and issubclass(type(self._tagger), TaggerI):
+            tagged = self._tagger.raw_tag(sent)
+            tree = self.tagged_parse(tagged)
+        else:
+            tree = [self.execute(sent, self._format_type_plain, self._format_type_parsed)]
 
-        return [tree]
+        return tree
 
     def tagged_parse(self, sent, verbose=False):
         """

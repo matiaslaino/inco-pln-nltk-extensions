@@ -1,9 +1,10 @@
 from Tkconstants import END, INSERT, W, E, S, N
-from Tkinter import Text
+from Tkinter import Text, StringVar
 import ttk
 
 from nltk import Tree
 
+from inco.pln.tag.treetagger.treetagger import TreeTagger
 from inco.pln.utils.frontend.ui_utils import UIUtils
 import inco.pln.tag.freeling
 from inco.pln.parse.stanford.stanford_shift_reduce import StanfordShiftReduceParser
@@ -28,24 +29,35 @@ class ControlParse:
 
         ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
         self.input_text_area = Text(self.frame, width=100)
-        self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=N+S+E+W)
-        ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
+        self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=N + S + E + W)
+        ttk.Button(self.frame, text="Read from file", command=self.__read_from_file) \
             .grid(row=0, column=2, columnspan=2)
 
-        ttk.Button(self.frame, text="Parse with FreeLing", command=self.__parse_with_freeling).grid(row=2, column=1, sticky=N+S+E+W)
-        ttk.Button(self.frame, text="Parse with MaltParser", command=self.__parse_with_maltparser).grid(row=2, column=2, sticky=N+S+E+W)
-        ttk.Button(self.frame, text="Parse with Stanford SR", command=self.__parse_with_stanford).grid(row=2, column=3, sticky=N+S+E+W)
+        ttk.Button(self.frame, text="Parse with FreeLing", command=self.__parse_with_freeling).grid(row=2, column=1,
+                                                                                                    sticky=N + S + E + W)
+        ttk.Button(self.frame, text="Parse with MaltParser", command=self.__parse_with_maltparser).grid(row=2, column=2,
+                                                                                                        sticky=N + S + E + W)
+        ttk.Button(self.frame, text="Parse with Stanford SR", command=self.__parse_with_stanford).grid(row=2, column=3,
+                                                                                                       sticky=N + S + E + W)
 
+        self.tagger_var = StringVar()
+        self.tagger_box = ttk.Combobox(self.frame, textvariable=self.tagger_var);
+        self.tagger_box['values'] = ('FreeLing', 'TreeTagger')
+        self.tagger_box.current(0)
+        self.tagger_box.grid(row=2, column=0)
+        self.tagger_box.state(['readonly'])
 
         ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
         self.output_text_area = Text(self.frame, width=100)
-        self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=N+S+E+W)
+        self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=N + S + E + W)
 
-        ttk.Button(self.frame, text="To DOT Language", command=self.__to_dot).grid(row=5, column=1, sticky=N+S+E+W)
-        ttk.Button(self.frame, text="Render tree with NLTK", command=self.__render_tree).grid(row=5, column=3, sticky=N+S+E+W)
+        ttk.Button(self.frame, text="To DOT Language", command=self.__to_dot).grid(row=5, column=1,
+                                                                                   sticky=N + S + E + W)
+        ttk.Button(self.frame, text="Render tree with NLTK", command=self.__render_tree).grid(row=5, column=3,
+                                                                                              sticky=N + S + E + W)
 
         self.output_dot_text_area = Text(self.frame, width=100)
-        self.output_dot_text_area.grid(row=6, column=0, columnspan=columns, sticky=N+S+E+W)
+        self.output_dot_text_area.grid(row=6, column=0, columnspan=columns, sticky=N + S + E + W)
 
         self.frame.grid_columnconfigure(0, weight=1)
         self.frame.grid_columnconfigure(1, weight=1)
@@ -64,11 +76,14 @@ class ControlParse:
         freeling_path = ConfigurationManager.load()['freeling_path']
 
         string = self.input_text_area.get("1.0", END)
-        # string = string.rstrip()
-        # string = "[" + string + "]"
-        # string = string.replace("\n", ",")
 
-        parser = FreeLing(freeling_path)
+        if self.tagger_var.get() == 'FreeLing':
+            tagger = None
+        else:
+            tagger_path = ConfigurationManager.load()['treetagger_path']
+            tagger = TreeTagger(tagger_path)
+
+        parser = FreeLing(freeling_path, tagger=tagger)
 
         tree = parser.raw_parse(string)[0]
 
@@ -81,14 +96,15 @@ class ControlParse:
     def __parse_with_maltparser(self):
         parser_path = ConfigurationManager.load()['maltparser_path']
         parser_model_path = ConfigurationManager.load()['maltparser_model_path']
-        freeling_path = ConfigurationManager.load()['freeling_path']
+
+        if self.tagger_var.get() == 'FreeLing':
+            tagger_path = ConfigurationManager.load()['freeling_path']
+            tagger = inco.pln.tag.freeling.FreeLing(tagger_path)
+        else:
+            tagger_path = ConfigurationManager.load()['treetagger_path']
+            tagger = TreeTagger(tagger_path)
 
         string = self.input_text_area.get("1.0", END)
-        # string = string.rstrip()
-        # string = "[" + string + "]"
-        # string = string.replace("\n", ",")
-
-        tagger = inco.pln.tag.freeling.FreeLing(freeling_path)
 
         parser = MaltParser(parser_path, parser_model_path, tagger=tagger)
 

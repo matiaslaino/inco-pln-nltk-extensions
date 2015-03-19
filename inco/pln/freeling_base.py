@@ -36,9 +36,6 @@ class FreeLingBase:
         :rtype: str
         """
 
-        # the tokenized param could probably be removed,
-        # it was a hack originally, might be a better way
-
         # TODO: verbose output method?
         if self.verbose:
             print "--- Creating temporal files ---"

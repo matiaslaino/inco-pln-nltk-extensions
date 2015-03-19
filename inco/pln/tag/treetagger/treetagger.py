@@ -84,9 +84,8 @@ class TreeTagger(TaggerI):
         else:
             tokens = word_tokenize(sent)
 
-        string = "\n".join(sent)
         self.__processor = TreeTagger.__process
-        return self.tag(string)
+        return self.tag(tokens)
 
     def raw_tag_full(self, string):
         """

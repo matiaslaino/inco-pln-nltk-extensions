@@ -1,5 +1,6 @@
 from Tkconstants import END, INSERT, W, E, S, N
-from Tkinter import Text
+from Tkinter import Text, Tk
+import tkMessageBox
 import ttk
 
 from inco.pln.utils.frontend.ui_utils import UIUtils
@@ -33,7 +34,7 @@ class ControlTokenize:
         ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
             .grid(row=0, column=2, columnspan=2)
 
-        ttk.Button(self.frame, text="Tag with FreeLing", command=self.__tokenize_with_freeling)\
+        ttk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling)\
             .grid(row=2, column=1, columnspan=2, sticky=N+W+S+E)
 
         ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
@@ -48,9 +49,13 @@ class ControlTokenize:
         freeling_path = ConfigurationManager.load()['freeling_path']
 
         string = self.input_text_area.get("1.0", END)
-        tokenizer = FreeLing(freeling_path)
 
-        tokens = tokenizer.tokenize(string)
+        try:
+            tokenizer = FreeLing(freeling_path)
+            tokens = tokenizer.tokenize(string)
+        except:
+            tkMessageBox.showerror("Error", "FreeLing is not configured correctly, please verify path.")
+            return
 
         tokenized_string = "\n".join(tokens)
 

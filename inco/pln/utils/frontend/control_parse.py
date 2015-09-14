@@ -4,7 +4,7 @@ import ttk
 
 from nltk import Tree
 
-from inco.pln.tag.treetagger.treetagger import TreeTagger
+from inco.pln.tag.treetagger import TreeTagger
 from inco.pln.utils.frontend.ui_utils import UIUtils
 import inco.pln.tag.freeling
 from inco.pln.parse.stanford.stanford_shift_reduce import StanfordShiftReduceParser
@@ -12,7 +12,6 @@ from inco.pln.parse.freeling import FreeLing
 from inco.pln.parse.maltparser import MaltParser
 from inco.pln.utils.dot_language_converter import DotLanguageConverter
 from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
-
 
 __author__ = 'Matias'
 

@@ -2,7 +2,7 @@
 from nltk import TaggerI, word_tokenize
 from nltk.tokenize.api import TokenizerI
 
-from inco.pln.tag.treetagger.tag_converter import Converter
+from inco.pln.tag.convert.tag_converter import TreeTaggerConverter
 
 
 __author__ = 'Matias'
@@ -82,7 +82,7 @@ class TreeTagger(TaggerI):
         if self.__tokenizer is not None:
             tokens = self.__tokenizer.tokenize(sent)
         else:
-            tokens = word_tokenize(sent)
+            tokens = word_tokenize(sent, 'spanish')
 
         self.__processor = TreeTagger.__process
         return self.tag(tokens)
@@ -204,7 +204,7 @@ class TreeTagger(TaggerI):
         utf8line = input_line.decode('utf8')
         parsed_line = tree_tagger_regular_expression.match(utf8line)
 
-        tags = Converter.convert_tag(parsed_line.group(2), parsed_line.group(1))
+        tags = TreeTaggerConverter.convert_tag(parsed_line.group(2), parsed_line.group(1))
 
         result_object = {constants.WORD: parsed_line.group(1), constants.LEMMA: parsed_line.group(3),
                          constants.ORIGINAL_TAG: parsed_line.group(2),

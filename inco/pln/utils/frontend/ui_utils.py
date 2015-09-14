@@ -29,8 +29,8 @@ class UIUtils:
         """
 
         filename = tkFileDialog.askopenfilename()
-        string = ""
-        with codecs.open(filename, encoding='utf8') as open_file:
+        string = u""
+        with codecs.open(filename, encoding='utf-8') as open_file:
             for line in open_file:
                 string = string + line
 

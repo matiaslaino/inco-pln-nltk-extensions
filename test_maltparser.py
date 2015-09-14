@@ -5,11 +5,11 @@ from inco.pln.parse.maltparser import MaltParser
 
 __author__ = 'Matias'
 
-import inco.pln.tag.treetagger
+import inco.pln.tag.convert
 import inco.pln.tag.freeling
 import inco.pln.parse.freeling
 
-tagger_tt = inco.pln.tag.treetagger.TreeTagger(
+tagger_tt = inco.pln.tag.convert.TreeTagger(
     "C:\\Users\\Matias\\Downloads\\tree-tagger-windows-3.2\\TreeTagger\\bin\\tag-spanish.bat")
 tagger_fl = inco.pln.tag.freeling.FreeLing(
     "C:\\Users\\Matias\\Downloads\\freeling-3.1-win\\freeling-3.1-win\\bin\\analyzer.exe")

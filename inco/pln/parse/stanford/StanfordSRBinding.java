@@ -1,3 +1,5 @@
+// javac -cp {};{};{};.;*;stanford-parser.jar  StanfordSRBinding.java
+
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.parser.shiftreduce.ShiftReduceParser;
 

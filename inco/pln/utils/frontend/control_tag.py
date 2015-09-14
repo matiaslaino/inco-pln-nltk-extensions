@@ -1,13 +1,13 @@
 from Tkconstants import END, INSERT, E, W, S, N
 from Tkinter import Text
 import json
+import tkMessageBox
 import ttk
 
 from inco.pln.utils.frontend.ui_utils import UIUtils
 from inco.pln.tag.freeling import FreeLing
-from inco.pln.tag.treetagger.treetagger import TreeTagger
+from inco.pln.tag.treetagger import TreeTagger
 from inco.pln.utils.frontend.configuration_manager import ConfigurationManager
-
 
 __author__ = 'Matias'
 
@@ -35,7 +35,6 @@ class ControlTag:
         ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
             .grid(row=0, column=2, columnspan=2)
 
-
         ttk.Button(self.frame, text="Tag with FreeLing", command=self.__tag_with_freeling)\
             .grid(row=2, column=1, sticky=N+W+S+E)
         ttk.Button(self.frame, text="Tag with TreeTagger", command=self.__tag_with_treetagger)\
@@ -53,9 +52,13 @@ class ControlTag:
         freeling_path = ConfigurationManager.load()['freeling_path']
 
         string = self.input_text_area.get("1.0", END)
-        tokenizer = FreeLing(freeling_path)
 
-        tokens_dict = tokenizer.raw_tag_full(string)
+        try:
+            tagger = FreeLing(freeling_path)
+            tokens_dict = tagger.raw_tag_full(string)
+        except:
+            tkMessageBox.showerror("Error", "FreeLing is not configured correctly, please verify path.")
+            return
 
         tokens_dict_array = [json.dumps(x) for x in tokens_dict]
 
@@ -72,9 +75,13 @@ class ControlTag:
         path = ConfigurationManager.load()['treetagger_path']
 
         string = self.input_text_area.get("1.0", END)
-        tokenizer = TreeTagger(path)
 
-        tokens_dict = tokenizer.raw_tag_full(string)
+        try:
+            tagger = TreeTagger(path)
+            tokens_dict = tagger.raw_tag_full(string)
+        except:
+            tkMessageBox.showerror("Error", "TreeTagger is not configured correctly, please verify path.")
+            return
 
         tokens_dict_array = [str(x) for x in tokens_dict]
 

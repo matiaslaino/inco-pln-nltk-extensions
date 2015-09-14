@@ -5,12 +5,12 @@
 #
 # __author__ = 'Matias'
 #
-# import inco.pln.tag.treetagger
+# import inco.pln.tag.convert
 # import inco.pln.tag.freeling
 # import inco.pln.parse.freeling
 # import inco.pln.tokenize.freeling
 #
-# tagger_tt = inco.pln.tag.treetagger.TreeTagger(
+# tagger_tt = inco.pln.tag.convert.TreeTagger(
 # "C:\\Users\\Matias\\Downloads\\tree-tagger-windows-3.2\\TreeTagger\\bin\\tag-spanish.bat")
 # tagger_fl = inco.pln.tag.freeling.FreeLing(
 #     "C:\\Users\\Matias\\Downloads\\freeling-3.1-win\\freeling-3.1-win\\bin\\analyzer.exe", True)
@@ -48,11 +48,30 @@
 # # print "--------- PARSE FREELING (TREETAGGER TAGGER) ----------"
 # # print parser_fl.parse(string_tt, True).draw()
 
-from nltk.parse.malt import MaltParser
+# from nltk.parse.malt import MaltParser
+#
+# real_mp = MaltParser(mco="espmalt-1.0.mco",
+#                      working_dir=r"C:\\Users\\Matias\\Downloads\\maltparser-1.8\\maltparser-1.8\\")
+# real_mp.config_malt(bin='C:\\Users\\Matias\\Downloads\\maltparser-1.8\\maltparser-1.8\\')
+# parsed = real_mp.raw_parse("Hola, que tal?")
+#
+# print parsed
 
-real_mp = MaltParser(mco="espmalt-1.0.mco",
-                     working_dir=r"C:\\Users\\Matias\\Downloads\\maltparser-1.8\\maltparser-1.8\\")
-real_mp.config_malt(bin='C:\\Users\\Matias\\Downloads\\maltparser-1.8\\maltparser-1.8\\')
-parsed = real_mp.raw_parse("Hola, que tal?")
 
-print parsed
+
+from inco.pln.tokenize.freeling import FreeLing
+from inco.pln.tag.treetagger import TreeTagger
+from inco.pln.parse.stanford.stanford_shift_reduce import StanfordShiftReduceParser
+
+texto = "Esto es un texto de prueba, sin tokenizar"
+
+ruta_a_treetagger = "D:/Matias/Proyecto-PLN/tree-tagger-windows-3.2/TreeTagger/bin/tag-spanish.bat"
+ruta_a_freeling = "D:/Matias/Proyecto-PLN/freeling-3.1-win/freeling-3.1-win/bin/analyzer.exe"
+ruta_a_stanford_sr = "D:/Matias/Proyecto-PLN/stanford/stanford-parser.jar"
+ruta_a_modelo_stanford_sr = "D:/Matias/Proyecto-PLN/stanford/stanford-srparser-2014-10-23-models.jar"
+
+freeling_tokenizer = FreeLing(ruta_a_freeling)
+tagger = TreeTagger(ruta_a_treetagger, freeling_tokenizer)
+parser = StanfordShiftReduceParser(ruta_a_stanford_sr, ruta_a_modelo_stanford_sr, tagger)
+
+print parser.parse(texto)

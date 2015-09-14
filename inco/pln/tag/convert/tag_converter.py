@@ -2,7 +2,7 @@
 __author__ = 'Matias'
 
 
-class Converter:
+class TreeTaggerConverter:
     def __init__(self):
         pass
 

@@ -2,6 +2,8 @@ Extensions for NLTK which integrate FreeLing, MaltParser, TreeTagger and Stanfor
 
 The complete documentation can be retrieved <a href="http://htmlpreview.github.io/?https://github.com/SoManyGoblins/inco-pln-nltk-extensions/blob/master/doc/index.html">here</a>.
 
+A sample Jupyter IPython notebook can be found <a href="http://nbviewer.ipython.org/github/SoManyGoblins/inco-pln-nltk-extensions/blob/master/Test_Notebook.ipynb">here</a>. 
+
 The project has been tested on Windows, and the following tool versions:
 
 <ul>

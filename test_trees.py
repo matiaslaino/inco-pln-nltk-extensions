@@ -1,7 +1,7 @@
 # coding=utf-8
-__author__ = 'Matias'
+__author__ = 'Matias Laino'
 
-from inco.pln.parse.tree.maltparser_tree_builder import MaltParserTreeBuilder
+from inco.nlp.parse.tree.maltparser_tree_builder import MaltParserTreeBuilder
 
 str = u"""+grup-verb_[
   grup-sp_[

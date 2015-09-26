@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>inco.nlp.tag.freeling</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >InCo NLTK Extensions</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;inco ::
+        Package&nbsp;nlp ::
+        Package&nbsp;tag ::
+        Module&nbsp;freeling
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="inco.nlp.tag.freeling-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="inco.nlp.tag.freeling-module.html">Module inco.nlp.tag.freeling</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment"># coding=utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">re</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">inco</tt><tt class="py-op">.</tt><tt class="py-name">nlp</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Module inco.nlp.freeling_base=inco.nlp.freeling_base-module.html"><a title="inco.nlp.freeling_base" class="py-name" href="#" onclick="return doclink('link-0', 'freeling_base', 'link-0');">freeling_base</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Class inco.nlp.freeling_base.FreeLingBase=inco.nlp.freeling_base.FreeLingBase-class.html"><a title="inco.nlp.freeling_base.FreeLingBase" class="py-name" href="#" onclick="return doclink('link-1', 'FreeLingBase', 'link-1');">FreeLingBase</a></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-name">__author__</tt> <tt class="py-op">=</tt> <tt class="py-string">'Matias Laino'</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">nltk</tt> <tt class="py-keyword">import</tt> <tt class="py-name">TaggerI</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">inco</tt><tt class="py-op">.</tt><tt class="py-name">nlp</tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module inco.nlp.tagging_constants=inco.nlp.tagging_constants-module.html"><a title="inco.nlp.tagging_constants" class="py-name" href="#" onclick="return doclink('link-2', 'tagging_constants', 'link-2');">tagging_constants</a></tt> <tt class="py-keyword">as</tt> <tt class="py-name">constants</tt> </tt>
+<a name="FreeLing"></a><div id="FreeLing-def"><a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt> <a class="py-toggle" href="#" id="FreeLing-toggle" onclick="return toggle('FreeLing');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html">FreeLing</a><tt class="py-op">(</tt><tt class="py-base-class">FreeLingBase</tt><tt class="py-op">,</tt> <tt class="py-base-class">TaggerI</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="FreeLing-expanded"><a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-docstring">    Wrapper class for the FreeLing tagger.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.__init__"></a><div id="FreeLing.__init__-def"><a name="L18"></a><tt class="py-lineno"> 18</tt> <a class="py-toggle" href="#" id="FreeLing.__init__-toggle" onclick="return toggle('FreeLing.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">path_to_tagger</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">verbose</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.__init__-expanded"><a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-docstring">        Constructor.</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-docstring">        @param path_to_tagger: path to the FreeLing executable</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-docstring">        @type path_to_tagger: str</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Method inco.nlp.freeling_base.FreeLingBase._initialize()=inco.nlp.freeling_base.FreeLingBase-class.html#_initialize"><a title="inco.nlp.freeling_base.FreeLingBase._initialize" class="py-name" href="#" onclick="return doclink('link-3', '_initialize', 'link-3');">_initialize</a></tt><tt class="py-op">(</tt><tt class="py-name">path_to_tagger</tt><tt class="py-op">,</tt> <tt class="py-name">verbose</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__processor</tt> <tt class="py-op">=</tt> <tt id="link-4" class="py-name" targets="Class inco.nlp.parse.freeling.FreeLing=inco.nlp.parse.freeling.FreeLing-class.html,Class inco.nlp.tag.freeling.FreeLing=inco.nlp.tag.freeling.FreeLing-class.html,Class inco.nlp.tokenize.freeling.FreeLing=inco.nlp.tokenize.freeling.FreeLing-class.html"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-4', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Static Method inco.nlp.tag.freeling.FreeLing.__process_native()=inco.nlp.tag.freeling.FreeLing-class.html#__process_native,Static Method inco.nlp.tag.treetagger.TreeTagger.__process_native()=inco.nlp.tag.treetagger.TreeTagger-class.html#__process_native"><a title="inco.nlp.tag.freeling.FreeLing.__process_native
+inco.nlp.tag.treetagger.TreeTagger.__process_native" class="py-name" href="#" onclick="return doclink('link-5', '__process_native', 'link-5');">__process_native</a></tt> </tt>
+</div><a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">staticmethod</tt> </tt>
+<a name="FreeLing.__process_full"></a><div id="FreeLing.__process_full-def"><a name="L29"></a><tt class="py-lineno"> 29</tt> <a class="py-toggle" href="#" id="FreeLing.__process_full-toggle" onclick="return toggle('FreeLing.__process_full');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#__process_full">__process_full</a><tt class="py-op">(</tt><tt class="py-param">tagged_dict</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.__process_full-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.__process_full-expanded"><a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt class="py-comment"># todo: add each dictionary directly...</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Variable inco.nlp.tagging_constants.WORD=inco.nlp.tagging_constants-module.html#WORD"><a title="inco.nlp.tagging_constants.WORD" class="py-name" href="#" onclick="return doclink('link-6', 'WORD', 'link-6');">WORD</a></tt><tt class="py-op">,</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name"><a title="inco.nlp.tagging_constants.WORD" class="py-name" href="#" onclick="return doclink('link-7', 'WORD', 'link-6');">WORD</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">                     <tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Variable inco.nlp.tagging_constants.LEMMA=inco.nlp.tagging_constants-module.html#LEMMA"><a title="inco.nlp.tagging_constants.LEMMA" class="py-name" href="#" onclick="return doclink('link-8', 'LEMMA', 'link-8');">LEMMA</a></tt><tt class="py-op">,</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="inco.nlp.tagging_constants.LEMMA" class="py-name" href="#" onclick="return doclink('link-9', 'LEMMA', 'link-8');">LEMMA</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">                     <tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Variable inco.nlp.tagging_constants.COARSE_TAG=inco.nlp.tagging_constants-module.html#COARSE_TAG"><a title="inco.nlp.tagging_constants.COARSE_TAG" class="py-name" href="#" onclick="return doclink('link-10', 'COARSE_TAG', 'link-10');">COARSE_TAG</a></tt><tt class="py-op">,</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="inco.nlp.tagging_constants.COARSE_TAG" class="py-name" href="#" onclick="return doclink('link-11', 'COARSE_TAG', 'link-10');">COARSE_TAG</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">                     <tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Variable inco.nlp.tagging_constants.POS_TAG=inco.nlp.tagging_constants-module.html#POS_TAG"><a title="inco.nlp.tagging_constants.POS_TAG" class="py-name" href="#" onclick="return doclink('link-12', 'POS_TAG', 'link-12');">POS_TAG</a></tt><tt class="py-op">,</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="inco.nlp.tagging_constants.POS_TAG" class="py-name" href="#" onclick="return doclink('link-13', 'POS_TAG', 'link-12');">POS_TAG</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">                     <tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name" targets="Variable inco.nlp.tagging_constants.FEATURES=inco.nlp.tagging_constants-module.html#FEATURES"><a title="inco.nlp.tagging_constants.FEATURES" class="py-name" href="#" onclick="return doclink('link-14', 'FEATURES', 'link-14');">FEATURES</a></tt><tt class="py-op">,</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-op">[</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">                         <tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Variable inco.nlp.tagging_constants.TAGGER=inco.nlp.tagging_constants-module.html#TAGGER"><a title="inco.nlp.tagging_constants.TAGGER" class="py-name" href="#" onclick="return doclink('link-15', 'TAGGER', 'link-15');">TAGGER</a></tt><tt class="py-op">,</tt> <tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name" targets="Variable inco.nlp.tagging_constants.TAGGERS_FREELING=inco.nlp.tagging_constants-module.html#TAGGERS_FREELING"><a title="inco.nlp.tagging_constants.TAGGERS_FREELING" class="py-name" href="#" onclick="return doclink('link-16', 'TAGGERS_FREELING', 'link-16');">TAGGERS_FREELING</a></tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">                         <tt class="py-op">(</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Variable inco.nlp.tagging_constants.PROBABILITY=inco.nlp.tagging_constants-module.html#PROBABILITY"><a title="inco.nlp.tagging_constants.PROBABILITY" class="py-name" href="#" onclick="return doclink('link-17', 'PROBABILITY', 'link-17');">PROBABILITY</a></tt><tt class="py-op">,</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="inco.nlp.tagging_constants.PROBABILITY" class="py-name" href="#" onclick="return doclink('link-18', 'PROBABILITY', 'link-17');">PROBABILITY</a></tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">                     <tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">staticmethod</tt> </tt>
+<a name="FreeLing.__process_native"></a><div id="FreeLing.__process_native-def"><a name="L41"></a><tt class="py-lineno"> 41</tt> <a class="py-toggle" href="#" id="FreeLing.__process_native-toggle" onclick="return toggle('FreeLing.__process_native');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#__process_native">__process_native</a><tt class="py-op">(</tt><tt class="py-param">tagged_dict</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.__process_native-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.__process_native-expanded"><a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="inco.nlp.tagging_constants.WORD" class="py-name" href="#" onclick="return doclink('link-19', 'WORD', 'link-6');">WORD</a></tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">tagged_dict</tt><tt class="py-op">[</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name"><a title="inco.nlp.tagging_constants.POS_TAG" class="py-name" href="#" onclick="return doclink('link-20', 'POS_TAG', 'link-12');">POS_TAG</a></tt><tt class="py-op">]</tt> </tt>
+</div><a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.process_output"></a><div id="FreeLing.process_output-def"><a name="L44"></a><tt class="py-lineno"> 44</tt> <a class="py-toggle" href="#" id="FreeLing.process_output-toggle" onclick="return toggle('FreeLing.process_output');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#process_output">process_output</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">file_path</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.process_output-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.process_output-expanded"><a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-docstring">        Processes the complete output of FreeLing when configured as a tagger.</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-docstring">        @param file_path: path to the output to process.</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"><tt class="py-docstring">        @type file_path: str</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt class="py-docstring">        @return: the list of tagged tokens, each one as a dictionary containing information on the token.</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: list(dict)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt class="py-keyword">with</tt> <tt class="py-name">open</tt><tt class="py-op">(</tt><tt class="py-name">file_path</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">output_file</tt><tt class="py-op">:</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">output_file</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt><tt class="py-op">:</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">                    <tt class="py-keyword">print</tt> <tt class="py-string">"Raw FreeLing output: "</tt> <tt class="py-op">+</tt> <tt class="py-name">line</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">line</tt> <tt class="py-op">!=</tt> <tt class="py-string">"\n"</tt><tt class="py-op">:</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">                    <tt class="py-name">converted_line</tt> <tt class="py-op">=</tt> <tt id="link-21" class="py-name"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-21', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Static Method inco.nlp.tag.freeling.FreeLing.__convert_line()=inco.nlp.tag.freeling.FreeLing-class.html#__convert_line,Static Method inco.nlp.tag.treetagger.TreeTagger.__convert_line()=inco.nlp.tag.treetagger.TreeTagger-class.html#__convert_line"><a title="inco.nlp.tag.freeling.FreeLing.__convert_line
+inco.nlp.tag.treetagger.TreeTagger.__convert_line" class="py-name" href="#" onclick="return doclink('link-22', '__convert_line', 'link-22');">__convert_line</a></tt><tt class="py-op">(</tt><tt class="py-name">line</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">                    <tt class="py-name">result</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__processor</tt><tt class="py-op">(</tt><tt class="py-name">converted_line</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line"> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">result</tt> </tt>
+</div><a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.tag"></a><div id="FreeLing.tag-def"><a name="L67"></a><tt class="py-lineno"> 67</tt> <a class="py-toggle" href="#" id="FreeLing.tag-toggle" onclick="return toggle('FreeLing.tag');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#tag">tag</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">tokens</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.tag-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.tag-expanded"><a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"><tt class="py-docstring">        Tags a collection of tokens.</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"><tt class="py-docstring">        @param tokens: the collection of tokens to POS tag.</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-docstring">        @type tokens: list(str)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"><tt class="py-docstring">        @return: the collection of tokens, POS tagged. Each entry contains: WORD POS-TAG</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: list(tuple(str, str))</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-name">string</tt> <tt class="py-op">=</tt> <tt class="py-string">"\n"</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">tokens</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__processor</tt> <tt class="py-op">=</tt> <tt id="link-23" class="py-name"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-23', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">.</tt><tt id="link-24" class="py-name"><a title="inco.nlp.tag.freeling.FreeLing.__process_native
+inco.nlp.tag.treetagger.TreeTagger.__process_native" class="py-name" href="#" onclick="return doclink('link-24', '__process_native', 'link-5');">__process_native</a></tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name" targets="Method inco.nlp.freeling_base.FreeLingBase.execute()=inco.nlp.freeling_base.FreeLingBase-class.html#execute"><a title="inco.nlp.freeling_base.FreeLingBase.execute" class="py-name" href="#" onclick="return doclink('link-25', 'execute', 'link-25');">execute</a></tt><tt class="py-op">(</tt><tt class="py-name">string</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-26" class="py-name" targets="Variable inco.nlp.freeling_base.FreeLingBase._format_type_tokenized=inco.nlp.freeling_base.FreeLingBase-class.html#_format_type_tokenized"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_tokenized" class="py-name" href="#" onclick="return doclink('link-26', '_format_type_tokenized', 'link-26');">_format_type_tokenized</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name" targets="Variable inco.nlp.freeling_base.FreeLingBase._format_type_tagged=inco.nlp.freeling_base.FreeLingBase-class.html#_format_type_tagged"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_tagged" class="py-name" href="#" onclick="return doclink('link-27', '_format_type_tagged', 'link-27');">_format_type_tagged</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.native_tag"></a><div id="FreeLing.native_tag-def"><a name="L80"></a><tt class="py-lineno"> 80</tt> <a class="py-toggle" href="#" id="FreeLing.native_tag-toggle" onclick="return toggle('FreeLing.native_tag');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#native_tag">native_tag</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">tokens</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.native_tag-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.native_tag-expanded"><a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line"><tt class="py-docstring">        Tags a collection of tokens using the tagger's native tags.</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line"><tt class="py-docstring">        This method is available for consistency with other taggers, in the case of FreeLing it is equivalent</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line"><tt class="py-docstring">        to calling tag()</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line"><tt class="py-docstring">        @param tokens: the collection of tokens to POS tag.</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line"><tt class="py-docstring">        @type tokens: list(str)</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"><tt class="py-docstring">        @return: the collection of tokens, POS tagged. Each entry contains: WORD POS-TAG</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: list(tuple(str, str))</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line"> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-28" class="py-name" targets="Method inco.nlp.tag.freeling.FreeLing.tag()=inco.nlp.tag.freeling.FreeLing-class.html#tag,Method inco.nlp.tag.treetagger.TreeTagger.tag()=inco.nlp.tag.treetagger.TreeTagger-class.html#tag"><a title="inco.nlp.tag.freeling.FreeLing.tag
+inco.nlp.tag.treetagger.TreeTagger.tag" class="py-name" href="#" onclick="return doclink('link-28', 'tag', 'link-28');">tag</a></tt><tt class="py-op">(</tt><tt class="py-name">tokens</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.tag_full"></a><div id="FreeLing.tag_full-def"><a name="L94"></a><tt class="py-lineno"> 94</tt> <a class="py-toggle" href="#" id="FreeLing.tag_full-toggle" onclick="return toggle('FreeLing.tag_full');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#tag_full">tag_full</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">tokens</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.tag_full-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.tag_full-expanded"><a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"><tt class="py-docstring">        Tags a collection of tokens.</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"><tt class="py-docstring">        @param tokens: the collection of tokens to POS tag.</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line"><tt class="py-docstring">        @type tokens: list(str)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line"><tt class="py-docstring">        @return: the collection of tokens, POS tagged. Each entry contains: WORD LEMMA COARSE-TAG POS-TAG FEATURES</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: list(dict)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line"> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__processor</tt> <tt class="py-op">=</tt> <tt id="link-29" class="py-name"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-29', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">.</tt><tt id="link-30" class="py-name" targets="Static Method inco.nlp.tag.freeling.FreeLing.__process_full()=inco.nlp.tag.freeling.FreeLing-class.html#__process_full,Static Method inco.nlp.tag.treetagger.TreeTagger.__process_full()=inco.nlp.tag.treetagger.TreeTagger-class.html#__process_full"><a title="inco.nlp.tag.freeling.FreeLing.__process_full
+inco.nlp.tag.treetagger.TreeTagger.__process_full" class="py-name" href="#" onclick="return doclink('link-30', '__process_full', 'link-30');">__process_full</a></tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-name">string</tt> <tt class="py-op">=</tt> <tt class="py-string">"\n"</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">tokens</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase.execute" class="py-name" href="#" onclick="return doclink('link-31', 'execute', 'link-25');">execute</a></tt><tt class="py-op">(</tt><tt class="py-name">string</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_tokenized" class="py-name" href="#" onclick="return doclink('link-32', '_format_type_tokenized', 'link-26');">_format_type_tokenized</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_tagged" class="py-name" href="#" onclick="return doclink('link-33', '_format_type_tagged', 'link-27');">_format_type_tagged</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.raw_tag"></a><div id="FreeLing.raw_tag-def"><a name="L108"></a><tt class="py-lineno">108</tt> <a class="py-toggle" href="#" id="FreeLing.raw_tag-toggle" onclick="return toggle('FreeLing.raw_tag');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#raw_tag">raw_tag</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">sent</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.raw_tag-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.raw_tag-expanded"><a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-docstring">        Tags an untokenized sentence.</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"><tt class="py-docstring">        @param sent: sentence to be tokenized and tagged</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"><tt class="py-docstring">        @type sent: unicode</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line"><tt class="py-docstring">        @return: the collection of tokens, POS tagged. Each entry contains: WORD POS-TAG</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: list(tuple(str, str))</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line"> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__processor</tt> <tt class="py-op">=</tt> <tt id="link-34" class="py-name"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-34', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">.</tt><tt id="link-35" class="py-name"><a title="inco.nlp.tag.freeling.FreeLing.__process_native
+inco.nlp.tag.treetagger.TreeTagger.__process_native" class="py-name" href="#" onclick="return doclink('link-35', '__process_native', 'link-5');">__process_native</a></tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase.execute" class="py-name" href="#" onclick="return doclink('link-36', 'execute', 'link-25');">execute</a></tt><tt class="py-op">(</tt><tt class="py-name">sent</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name" targets="Variable inco.nlp.freeling_base.FreeLingBase._format_type_plain=inco.nlp.freeling_base.FreeLingBase-class.html#_format_type_plain"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_plain" class="py-name" href="#" onclick="return doclink('link-37', '_format_type_plain', 'link-37');">_format_type_plain</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_tagged" class="py-name" href="#" onclick="return doclink('link-38', '_format_type_tagged', 'link-27');">_format_type_tagged</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line"> </tt>
+<a name="FreeLing.raw_tag_full"></a><div id="FreeLing.raw_tag_full-def"><a name="L121"></a><tt class="py-lineno">121</tt> <a class="py-toggle" href="#" id="FreeLing.raw_tag_full-toggle" onclick="return toggle('FreeLing.raw_tag_full');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#raw_tag_full">raw_tag_full</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">string</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.raw_tag_full-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.raw_tag_full-expanded"><a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line"><tt class="py-docstring">        Tags a collection of tokens.</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line"><tt class="py-docstring">        @param string: string to POS tag.</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line"><tt class="py-docstring">        @type string: unicode</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line"><tt class="py-docstring">        @return: the collection of tokens, POS tagged. Each entry contains: WORD LEMMA COARSE-TAG POS-TAG FEATURES</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: list(dict)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">__processor</tt> <tt class="py-op">=</tt> <tt id="link-39" class="py-name"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-39', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">.</tt><tt id="link-40" class="py-name"><a title="inco.nlp.tag.freeling.FreeLing.__process_full
+inco.nlp.tag.treetagger.TreeTagger.__process_full" class="py-name" href="#" onclick="return doclink('link-40', '__process_full', 'link-30');">__process_full</a></tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-41" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase.execute" class="py-name" href="#" onclick="return doclink('link-41', 'execute', 'link-25');">execute</a></tt><tt class="py-op">(</tt><tt class="py-name">string</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-42" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_plain" class="py-name" href="#" onclick="return doclink('link-42', '_format_type_plain', 'link-37');">_format_type_plain</a></tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-43" class="py-name"><a title="inco.nlp.freeling_base.FreeLingBase._format_type_tagged" class="py-name" href="#" onclick="return doclink('link-43', '_format_type_tagged', 'link-27');">_format_type_tagged</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">staticmethod</tt> </tt>
+<a name="FreeLing.__convert_line"></a><div id="FreeLing.__convert_line-def"><a name="L135"></a><tt class="py-lineno">135</tt> <a class="py-toggle" href="#" id="FreeLing.__convert_line-toggle" onclick="return toggle('FreeLing.__convert_line');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling.FreeLing-class.html#__convert_line">__convert_line</a><tt class="py-op">(</tt><tt class="py-param">input_line</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="FreeLing.__convert_line-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="FreeLing.__convert_line-expanded"><a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-docstring">        Converts a single line of FreeLing output into a dictionary.</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line"><tt class="py-docstring">        dictionary keys:</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line"><tt class="py-docstring">            word</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"><tt class="py-docstring">            lemma</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line"><tt class="py-docstring">            original_tag</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line"><tt class="py-docstring">            coarse_tag</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line"><tt class="py-docstring">            pos_tag</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line"><tt class="py-docstring">            probability</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line"><tt class="py-docstring">        @param input_line: line to convert from FreeLing format to a dictionary.</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"><tt class="py-docstring">        @type input_line: str</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line"><tt class="py-docstring">        @return the FreeLing output line, formatted into a dictionary</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line"><tt class="py-docstring">        @rtype: dict</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-comment"># regular expression to recognize: word lemma coarse-tag pos-tag original-tag</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">        <tt class="py-name">tree_tagger_regular_expression</tt> <tt class="py-op">=</tt> <tt class="py-name">re</tt><tt class="py-op">.</tt><tt class="py-name">compile</tt><tt class="py-op">(</tt><tt class="py-string">"^(.*)? (.*)? (.*)? (.*)?"</tt><tt class="py-op">)</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line"> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">        <tt class="py-name">utf8line</tt> <tt class="py-op">=</tt> <tt class="py-name">input_line</tt><tt class="py-op">.</tt><tt class="py-name">decode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">        <tt class="py-name">parsed_line</tt> <tt class="py-op">=</tt> <tt class="py-name">tree_tagger_regular_expression</tt><tt class="py-op">.</tt><tt class="py-name">match</tt><tt class="py-op">(</tt><tt class="py-name">utf8line</tt><tt class="py-op">)</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">        <tt class="py-name">result_object</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-44" class="py-name"><a title="inco.nlp.tagging_constants.WORD" class="py-name" href="#" onclick="return doclink('link-44', 'WORD', 'link-6');">WORD</a></tt><tt class="py-op">:</tt> <tt class="py-name">parsed_line</tt><tt class="py-op">.</tt><tt class="py-name">group</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-45" class="py-name"><a title="inco.nlp.tagging_constants.LEMMA" class="py-name" href="#" onclick="return doclink('link-45', 'LEMMA', 'link-8');">LEMMA</a></tt><tt class="py-op">:</tt> <tt class="py-name">parsed_line</tt><tt class="py-op">.</tt><tt class="py-name">group</tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">                         <tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Variable inco.nlp.tagging_constants.ORIGINAL_TAG=inco.nlp.tagging_constants-module.html#ORIGINAL_TAG"><a title="inco.nlp.tagging_constants.ORIGINAL_TAG" class="py-name" href="#" onclick="return doclink('link-46', 'ORIGINAL_TAG', 'link-46');">ORIGINAL_TAG</a></tt><tt class="py-op">:</tt> <tt class="py-name">parsed_line</tt><tt class="py-op">.</tt><tt class="py-name">group</tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">                         <tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-47" class="py-name"><a title="inco.nlp.tagging_constants.COARSE_TAG" class="py-name" href="#" onclick="return doclink('link-47', 'COARSE_TAG', 'link-10');">COARSE_TAG</a></tt><tt class="py-op">:</tt> <tt class="py-name">parsed_line</tt><tt class="py-op">.</tt><tt class="py-name">group</tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-48" class="py-name"><a title="inco.nlp.tagging_constants.POS_TAG" class="py-name" href="#" onclick="return doclink('link-48', 'POS_TAG', 'link-12');">POS_TAG</a></tt><tt class="py-op">:</tt> <tt class="py-name">parsed_line</tt><tt class="py-op">.</tt><tt class="py-name">group</tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">                         <tt class="py-name">constants</tt><tt class="py-op">.</tt><tt id="link-49" class="py-name"><a title="inco.nlp.tagging_constants.PROBABILITY" class="py-name" href="#" onclick="return doclink('link-49', 'PROBABILITY', 'link-17');">PROBABILITY</a></tt><tt class="py-op">:</tt> <tt class="py-name">parsed_line</tt><tt class="py-op">.</tt><tt class="py-name">group</tt><tt class="py-op">(</tt><tt class="py-number">4</tt><tt class="py-op">)</tt><tt class="py-op">}</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line"> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">result_object</tt> </tt>
+</div></div><a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line"> </tt>
+<a name="demo"></a><div id="demo-def"><a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line"> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt> <a class="py-toggle" href="#" id="demo-toggle" onclick="return toggle('demo');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="inco.nlp.tag.freeling-module.html#demo">demo</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="demo-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="demo-expanded"><a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">    <tt id="link-50" class="py-name" targets="Module inco.nlp.parse.freeling=inco.nlp.parse.freeling-module.html,Module inco.nlp.tag.freeling=inco.nlp.tag.freeling-module.html,Module inco.nlp.tokenize.freeling=inco.nlp.tokenize.freeling-module.html"><a title="inco.nlp.parse.freeling
+inco.nlp.tag.freeling
+inco.nlp.tokenize.freeling" class="py-name" href="#" onclick="return doclink('link-50', 'freeling', 'link-50');">freeling</a></tt> <tt class="py-op">=</tt> <tt id="link-51" class="py-name"><a title="inco.nlp.parse.freeling.FreeLing
+inco.nlp.tag.freeling.FreeLing
+inco.nlp.tokenize.freeling.FreeLing" class="py-name" href="#" onclick="return doclink('link-51', 'FreeLing', 'link-4');">FreeLing</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">    <tt class="py-name">tagged</tt> <tt class="py-op">=</tt> <tt id="link-52" class="py-name"><a title="inco.nlp.parse.freeling
+inco.nlp.tag.freeling
+inco.nlp.tokenize.freeling" class="py-name" href="#" onclick="return doclink('link-52', 'freeling', 'link-50');">freeling</a></tt><tt class="py-op">.</tt><tt id="link-53" class="py-name" targets="Method inco.nlp.tag.freeling.FreeLing.raw_tag()=inco.nlp.tag.freeling.FreeLing-class.html#raw_tag,Method inco.nlp.tag.treetagger.TreeTagger.raw_tag()=inco.nlp.tag.treetagger.TreeTagger-class.html#raw_tag"><a title="inco.nlp.tag.freeling.FreeLing.raw_tag
+inco.nlp.tag.treetagger.TreeTagger.raw_tag" class="py-name" href="#" onclick="return doclink('link-53', 'raw_tag', 'link-53');">raw_tag</a></tt><tt class="py-op">(</tt><tt class="py-string">u"En el tramo de Telef&#243;nica, un toro descolgado ha creado peligro "</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">                              <tt class="py-string">u"tras embestir contra un grupo de mozos."</tt><tt class="py-op">)</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">    <tt class="py-keyword">print</tt> <tt class="py-name">tagged</tt> </tt>
+</div><a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line"> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line"> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">    <tt id="link-54" class="py-name" targets="Function inco.nlp.parse.freeling.demo()=inco.nlp.parse.freeling-module.html#demo,Function inco.nlp.parse.maltparser.demo()=inco.nlp.parse.maltparser-module.html#demo,Function inco.nlp.parse.stanford.stanford_shift_reduce.demo()=inco.nlp.parse.stanford.stanford_shift_reduce-module.html#demo,Function inco.nlp.tag.freeling.demo()=inco.nlp.tag.freeling-module.html#demo,Function inco.nlp.tag.treetagger.demo()=inco.nlp.tag.treetagger-module.html#demo"><a title="inco.nlp.parse.freeling.demo
+inco.nlp.parse.maltparser.demo
+inco.nlp.parse.stanford.stanford_shift_reduce.demo
+inco.nlp.tag.freeling.demo
+inco.nlp.tag.treetagger.demo" class="py-name" href="#" onclick="return doclink('link-54', 'demo', 'link-54');">demo</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            >InCo NLTK Extensions</th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Sep 26 20:16:17 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -26,6 +26,6 @@ maltparser = MaltParser(path_maltparser, path_maltparser_model, tagger)
 
 tokens = freeling_tokenizer.tokenize(text)
 
-print stanford_sr_parser.parse(tokens).next()
-print freeling_parser.parse(tokens).next()
-print maltparser.parse(tokens).next()
+print(next(stanford_sr_parser.parse(tokens)))
+print(next(freeling_parser.parse(tokens)))
+print(next(maltparser.parse(tokens)))

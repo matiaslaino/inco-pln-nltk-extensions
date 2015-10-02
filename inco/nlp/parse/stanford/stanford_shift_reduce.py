@@ -100,7 +100,7 @@ class StanfordShiftReduceParser(ParserI):
         input_name = temp_input.name
 
         if verbose:
-            print "--- Executing Stanford SR Parser ---"
+            print ("--- Executing Stanford SR Parser ---")
 
         res_code = self.__execute(input_name, output_name)
 
@@ -121,7 +121,7 @@ class StanfordShiftReduceParser(ParserI):
         # stdout = stdout.decode('utf8')
 
         if verbose:
-            print "Stanford result code: " + str(res_code)
+            print ("Stanford result code: " + str(res_code))
 
         parse_tree_str = ""
 
@@ -131,14 +131,14 @@ class StanfordShiftReduceParser(ParserI):
                     parse_tree_str += line
 
         if verbose:
-            print "--- Deleting temporal files ---"
+            print ("--- Deleting temporal files ---")
 
         os.remove(input_name)
         os.remove(output_name)
 
         if verbose:
-            print "Stanford SR raw output: \n" + parse_tree_str
-            print "--- Building parse tree ---"
+            print ("Stanford SR raw output: \n" + parse_tree_str)
+            print ("--- Building parse tree ---")
 
         tree = Tree.fromstring(parse_tree_str)
 

@@ -107,12 +107,12 @@ class MaltParser(ParserI):
         input_name = temp_input.name
 
         if verbose:
-            print "--- Executing MaltParser ---"
+            print("--- Executing MaltParser ---")
 
         res_code = self.__execute(input_name, output_name)
 
         if verbose:
-            print "MaltParser result code: " + str(res_code)
+            print ("MaltParser result code: " + str(res_code))
 
         parse_tree_str = ""
 
@@ -122,14 +122,14 @@ class MaltParser(ParserI):
                     parse_tree_str += line
 
         if verbose:
-            print "--- Deleting temporal files ---"
+            print ("--- Deleting temporal files ---")
 
         os.remove(input_name)
         os.remove(output_name)
 
         if verbose:
-            print "Maltparser raw output: \n" + parse_tree_str
-            print "--- Building parse tree ---"
+            print ("Maltparser raw output: \n" + parse_tree_str)
+            print ("--- Building parse tree ---")
 
         tree_builder = MaltParserTreeBuilder()
         tree = tree_builder.build(parse_tree_str)
@@ -157,7 +157,7 @@ class MaltParser(ParserI):
                                                                                    input_file_path, output_file_path)
 
         if verbose:
-            print "Execution string: <" + command + ">"
+            print("Execution string: <" + command + ">")
 
         # print command
         return MaltParser.__execute_binary(command, verbose)

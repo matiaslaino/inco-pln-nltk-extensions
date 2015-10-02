@@ -165,7 +165,7 @@ class TreeTagger(TaggerI):
         execution_string += " " + input_file_path
         execution_string += " " + output_file_path
 
-        print execution_string
+        print(execution_string)
 
         res_code = subprocess.call(execution_string)
 
@@ -211,7 +211,7 @@ class TreeTagger(TaggerI):
         # form: word, lemma, coarse tag, pos tag, original tag
         tree_tagger_regular_expression = re.compile("^(.*)?\t(.*)?\t(.*)?$")
 
-        utf8line = input_line.decode('utf8')
+        utf8line = input_line
         parsed_line = tree_tagger_regular_expression.match(utf8line)
 
         tags = TreeTaggerConverter.convert_tag(parsed_line.group(2), parsed_line.group(1))
@@ -227,7 +227,7 @@ def demo():
     tagger = TreeTagger()
     tagged = tagger.raw_tag(u"En el tramo de Telefónica, un toro descolgado ha creado peligro "
                             u"tras embestir contra un grupo de mozos.")
-    print tagged
+    print(tagged)
 
 
 if __name__ == '__main__':

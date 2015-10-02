@@ -56,7 +56,7 @@ class FreeLing(FreeLingBase, TaggerI):
         with open(file_path) as output_file:
             for line in output_file:
                 if self.verbose:
-                    print "Raw FreeLing output: " + line
+                    print ("Raw FreeLing output: " + line)
 
                 if line != "\n":
                     converted_line = FreeLing.__convert_line(line)
@@ -153,7 +153,7 @@ class FreeLing(FreeLingBase, TaggerI):
         # regular expression to recognize: word lemma coarse-tag pos-tag original-tag
         tree_tagger_regular_expression = re.compile("^(.*)? (.*)? (.*)? (.*)?")
 
-        utf8line = input_line.decode('utf-8')
+        utf8line = input_line
         parsed_line = tree_tagger_regular_expression.match(utf8line)
 
         result_object = {constants.WORD: parsed_line.group(1), constants.LEMMA: parsed_line.group(2),
@@ -168,7 +168,7 @@ def demo():
     freeling = FreeLing()
     tagged = freeling.raw_tag(u"En el tramo de Telefónica, un toro descolgado ha creado peligro "
                               u"tras embestir contra un grupo de mozos.")
-    print tagged
+    print (tagged)
 
 
 if __name__ == '__main__':

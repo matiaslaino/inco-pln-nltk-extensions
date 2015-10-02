@@ -38,7 +38,7 @@ class FreeLingBase:
 
         # TODO: verbose output method?
         if self.verbose:
-            print "--- Creating temporal files ---"
+            print ("--- Creating temporal files ---")
 
         temp_input = tempfile.NamedTemporaryFile(delete=False, prefix="freeling_input_")
         temp_output = tempfile.NamedTemporaryFile(delete=False, prefix="freeling_output_")
@@ -53,21 +53,21 @@ class FreeLingBase:
         temp_output.close()
 
         if self.verbose:
-            print "--- Executing FreeLing ---"
+            print("--- Executing FreeLing ---")
 
         # call the binary
         # todo: handle binary fail (res != 0)
         self.__execute_binary(self.path_to_tagger, input_name, output_name, input_format, output_format)
 
         if self.verbose:
-            print "--- Processing FreeLing's output ---"
+            print("--- Processing FreeLing's output ---")
 
         # process the output. each derived class is responsible for doing this.
         # todo: unresolved reference warning, fix
         result = self.process_output(output_name)
 
         if self.verbose:
-            print "--- Deleting temporal files ---"
+            print("--- Deleting temporal files ---")
 
         os.remove(input_name)
         os.remove(output_name)
@@ -99,13 +99,13 @@ class FreeLingBase:
         bin_path = os.path.dirname(execution_string)
 
         if self.verbose:
-            print "Binary path: <" + bin_path + ">"
+            print("Binary path: <" + bin_path + ">")
 
         # we are expecting the configuration file to be on the same directory as the executable
         cfg_path = os.path.join(bin_path, "analyzer.cfg")
 
         if self.verbose:
-            print "Configuration path: <" + bin_path + ">"
+            print("Configuration path: <" + bin_path + ">")
 
         # assemble execution string
         execution_string += " -f {0} --lang es --inpf {1} --outf {2}".format(cfg_path, input_format,
@@ -115,12 +115,12 @@ class FreeLingBase:
         execution_string += " >" + output_file_path
 
         if self.verbose:
-            print "Execution string: <" + execution_string + ">"
+            print("Execution string: <" + execution_string + ">")
 
         res_code = subprocess.call(execution_string, shell=True)
 
         if self.verbose:
-            print "Execution result: " + str(res_code)
+            print("Execution result: " + str(res_code))
 
         return res_code
 

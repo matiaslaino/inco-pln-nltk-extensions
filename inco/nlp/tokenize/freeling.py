@@ -57,6 +57,6 @@ class FreeLing(FreeLingBase, TokenizerI):
 
                 result.append(line.rstrip())
                 if self.verbose:
-                    print line
+                    print(line)
 
         return result

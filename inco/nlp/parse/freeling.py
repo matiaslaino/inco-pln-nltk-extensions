@@ -46,11 +46,11 @@ class FreeLing(FreeLingBase, ParserI):
             for line in temp_output:
                 parse_tree_str += line
                 if self.verbose:
-                    print line
+                    print(line)
 
         if self.verbose:
-            print "FreeLing raw output: " + parse_tree_str
-            print "--- Building parse tree ---"
+            print("FreeLing raw output: " + parse_tree_str)
+            print("--- Building parse tree ---")
 
         tree_builder = FreeLingTreeBuilder()
         tree = tree_builder.build(parse_tree_str)
@@ -118,7 +118,7 @@ def demo():
     freeling = FreeLing()
     tree = freeling.raw_parse(u"En el tramo de Telefónica, un toro descolgado ha creado peligro "
                               u"tras embestir contra un grupo de mozos.")
-    tree.next().draw()
+    next(tree).draw()
 
 
 if __name__ == '__main__':

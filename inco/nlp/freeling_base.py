@@ -21,7 +21,7 @@ class FreeLingBase:
         self.path_to_tagger = path_to_tagger
 
         if self.path_to_tagger is None:
-            self.path_to_tagger = os.environ['NLP_NLTKEXT_FREELING']
+            self.path_to_tagger = os.environ['NLP_FREELING']
 
         if not os.path.isfile(self.path_to_tagger):
             raise Exception("FreeLing executable not found")

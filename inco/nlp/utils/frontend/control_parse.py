@@ -1,6 +1,13 @@
-from Tkconstants import END, INSERT, W, E, S, N
-from Tkinter import Text, StringVar
-import ttk
+
+try:
+  import Tkinter              # Python 2
+  import ttk
+  from Tkconstants import END, INSERT, W, E, S, N
+except ImportError:
+  import tkinter as Tkinter   # Python 3
+  import tkinter.ttk as ttk
+  from tkinter.constants import END, INSERT, W, E, S, N
+
 
 from nltk import Tree
 
@@ -27,7 +34,7 @@ class ControlParse:
         columns = 5
 
         ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
-        self.input_text_area = Text(self.frame, width=100)
+        self.input_text_area = Tkinter.Text(self.frame, width=100)
         self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=N + S + E + W)
         ttk.Button(self.frame, text="Read from file", command=self.__read_from_file) \
             .grid(row=0, column=2, columnspan=2)
@@ -39,7 +46,7 @@ class ControlParse:
         ttk.Button(self.frame, text="Parse with Stanford SR", command=self.__parse_with_stanford).grid(row=2, column=3,
                                                                                                        sticky=N + S + E + W)
 
-        self.tagger_var = StringVar()
+        self.tagger_var = Tkinter.StringVar()
         self.tagger_box = ttk.Combobox(self.frame, textvariable=self.tagger_var);
         self.tagger_box['values'] = ('FreeLing', 'TreeTagger')
         self.tagger_box.current(0)
@@ -47,7 +54,7 @@ class ControlParse:
         self.tagger_box.state(['readonly'])
 
         ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
-        self.output_text_area = Text(self.frame, width=100)
+        self.output_text_area = Tkinter.Text(self.frame, width=100)
         self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=N + S + E + W)
 
         ttk.Button(self.frame, text="To DOT Language", command=self.__to_dot).grid(row=5, column=1,
@@ -55,7 +62,7 @@ class ControlParse:
         ttk.Button(self.frame, text="Render tree with NLTK", command=self.__render_tree).grid(row=5, column=3,
                                                                                               sticky=N + S + E + W)
 
-        self.output_dot_text_area = Text(self.frame, width=100)
+        self.output_dot_text_area = Tkinter.Text(self.frame, width=100)
         self.output_dot_text_area.grid(row=6, column=0, columnspan=columns, sticky=N + S + E + W)
 
         self.frame.grid_columnconfigure(0, weight=1)

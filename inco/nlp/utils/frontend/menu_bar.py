@@ -1,7 +1,13 @@
-from Tkinter import Menu, Toplevel, StringVar
-import codecs
-import tkFileDialog
-from ttk import *
+try:
+    import Tkinter              # Python 2
+    import ttk
+    import tkFileDialog
+    from Tkconstants import RIGHT, END, INSERT, Y, W, E, S, N
+except ImportError:
+    import tkinter as Tkinter   # Python 3
+    import tkinter.ttk as ttk
+    from tkinter.constants import RIGHT, END, INSERT, Y,  W, E, S, N
+    import tkinter.filedialog as tkFileDialog
 
 from inco.nlp.utils.frontend.configuration_manager import ConfigurationManager
 
@@ -15,65 +21,65 @@ class MenuBar:
     read_delegate = None
 
     def open_configuration(self):
-        filewin = Toplevel(self.parent)
+        filewin = Tkinter.Toplevel(self.parent)
         filewin.wm_title('Configuration')
         filewin.wm_transient(self.parent)
 
         i = 0
 
-        label = Label(filewin, text="Configure path to binaries")
+        label = Tkinter.Label(filewin, text="Configure path to binaries")
         label.grid(row=i, column=0)
         i += 1
 
-        label = Label(filewin, text="FreeLing")
+        label = Tkinter.Label(filewin, text="FreeLing")
         label.grid(row=i, column=0)
-        entry_freeling = Entry(filewin, width=100, textvariable=self.var_freeling_path)
+        entry_freeling = Tkinter.Entry(filewin, width=100, textvariable=self.var_freeling_path)
         entry_freeling.grid(row=i, column=1)
-        control = Button(filewin, text="Browse...", command=self.browse_freeling)
+        control = Tkinter.Button(filewin, text="Browse...", command=self.browse_freeling)
         control.grid(row=1, column=2)
         i += 1
 
-        label = Label(filewin, text="TreeTagger")
+        label = Tkinter.Label(filewin, text="TreeTagger")
         label.grid(row=i, column=0)
-        entry_treetagger = Entry(filewin, width=100, textvariable=self.var_treetagger_path)
+        entry_treetagger = Tkinter.Entry(filewin, width=100, textvariable=self.var_treetagger_path)
         entry_treetagger.grid(row=i, column=1)
-        control = Button(filewin, text="Browse...", command=self.browse_treetagger)
+        control = Tkinter.Button(filewin, text="Browse...", command=self.browse_treetagger)
         control.grid(row=i, column=2)
         i += 1
 
-        label = Label(filewin, text="MaltParser")
+        label = Tkinter.Label(filewin, text="MaltParser")
         label.grid(row=i, column=0)
-        entry_maltparser = Entry(filewin, width=100, textvariable=self.var_maltparser_path)
+        entry_maltparser = Tkinter.Entry(filewin, width=100, textvariable=self.var_maltparser_path)
         entry_maltparser.grid(row=i, column=1)
-        control = Button(filewin, text="Browse...", command=self.browse_maltparser)
+        control = Tkinter.Button(filewin, text="Browse...", command=self.browse_maltparser)
         control.grid(row=i, column=2)
         i += 1
 
-        label = Label(filewin, text="MaltParser Spanish model")
+        label = Tkinter.Label(filewin, text="MaltParser Spanish model")
         label.grid(row=i, column=0)
-        entry = Entry(filewin, width=100, textvariable=self.var_maltparser_model_path)
+        entry = Tkinter.Entry(filewin, width=100, textvariable=self.var_maltparser_model_path)
         entry.grid(row=i, column=1)
-        control = Button(filewin, text="Browse...", command=self.browse_maltparser_model)
+        control = Tkinter.Button(filewin, text="Browse...", command=self.browse_maltparser_model)
         control.grid(row=i, column=2)
         i += 1
 
-        label = Label(filewin, text="Stanford Shift-Reduce")
+        label = Tkinter.Label(filewin, text="Stanford Shift-Reduce")
         label.grid(row=i, column=0)
-        entry = Entry(filewin, width=100, textvariable=self.var_stanfordsr_path)
+        entry = Tkinter.Entry(filewin, width=100, textvariable=self.var_stanfordsr_path)
         entry.grid(row=i, column=1)
-        control = Button(filewin, text="Browse...", command=self.browse_stanfordsr)
+        control = Tkinter.Button(filewin, text="Browse...", command=self.browse_stanfordsr)
         control.grid(row=i, column=2)
         i += 1
 
-        label = Label(filewin, text="Stanford SR Spanish model")
+        label = Tkinter.Label(filewin, text="Stanford SR Spanish model")
         label.grid(row=i, column=0)
-        entry = Entry(filewin, width=100, textvariable=self.var_stanfordsr_model_path)
+        entry = Tkinter.Entry(filewin, width=100, textvariable=self.var_stanfordsr_model_path)
         entry.grid(row=i, column=1)
-        control = Button(filewin, text="Browse...", command=self.browse_stanfordsr_model)
+        control = Tkinter.Button(filewin, text="Browse...", command=self.browse_stanfordsr_model)
         control.grid(row=i, column=2)
         i += 1
 
-        control = Button(filewin, text="Apply", command=self.__apply_configuration)
+        control = Tkinter.Button(filewin, text="Apply", command=self.__apply_configuration)
         control.grid(row=i, columnspan=2)
 
         # load saved settings
@@ -131,14 +137,14 @@ class MenuBar:
     def __init__(self, parent):
         self.parent = parent
 
-        menubar = Menu(self.parent)
+        menubar = Tkinter.Menu(self.parent)
         menubar.add_command(label="Configuration", command=self.open_configuration)
 
-        self.var_freeling_path = StringVar()
-        self.var_maltparser_path = StringVar()
-        self.var_maltparser_model_path = StringVar()
-        self.var_treetagger_path = StringVar()
-        self.var_stanfordsr_model_path = StringVar()
-        self.var_stanfordsr_path = StringVar()
+        self.var_freeling_path = Tkinter.StringVar()
+        self.var_maltparser_path = Tkinter.StringVar()
+        self.var_maltparser_model_path = Tkinter.StringVar()
+        self.var_treetagger_path = Tkinter.StringVar()
+        self.var_stanfordsr_model_path = Tkinter.StringVar()
+        self.var_stanfordsr_path = Tkinter.StringVar()
 
         parent.config(menu=menubar)

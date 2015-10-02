@@ -1,7 +1,13 @@
-from Tkconstants import END, INSERT, W, E, S, N
-from Tkinter import Text, Tk
-import tkMessageBox
-import ttk
+try:
+    import Tkinter              # Python 2
+    import ttk
+    import tkMessageBox
+    from Tkconstants import RIGHT, END, INSERT, Y, W, E, S, N
+except ImportError:
+    import tkinter as Tkinter   # Python 3
+    import tkinter.ttk as ttk
+    from tkinter.constants import RIGHT, END, INSERT, Y,  W, E, S, N
+    import tkinter.messagebox as tkMessageBox
 
 from inco.nlp.utils.frontend.ui_utils import UIUtils
 from inco.nlp.tokenize.freeling import FreeLing
@@ -29,7 +35,7 @@ class ControlTokenize:
         columns = 4
         #
         ttk.Label(self.frame, text="Input").grid(row=0, column=0, columnspan=columns)
-        self.input_text_area = Text(self.frame, height=10)
+        self.input_text_area = Tkinter.Text(self.frame, height=10)
         self.input_text_area.grid(row=1, column=0, columnspan=columns, sticky=W+E+S+N)
         ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
             .grid(row=0, column=2, columnspan=2)
@@ -38,7 +44,7 @@ class ControlTokenize:
             .grid(row=2, column=1, columnspan=2, sticky=N+W+S+E)
 
         ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
-        self.output_text_area = Text(self.frame, height=10)
+        self.output_text_area = Tkinter.Text(self.frame, height=10)
         self.output_text_area.grid(row=4, column=0, columnspan=columns, sticky=W+E+S+N)
         self.output_text_area['state'] = 'disabled'
 

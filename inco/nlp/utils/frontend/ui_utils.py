@@ -1,9 +1,16 @@
-from Tkconstants import RIGHT, END, INSERT
-from Tkconstants import Y
-import Tkinter as tk
 import codecs
 import threading
-import tkFileDialog
+
+try:
+    import Tkinter              # Python 2
+    import ttk
+    import tkFileDialog
+    from Tkconstants import RIGHT, END, INSERT, Y, W, E, S, N
+except ImportError:
+    import tkinter as Tkinter   # Python 3
+    import tkinter.ttk as ttk
+    from tkinter.constants import RIGHT, END, INSERT, Y,  W, E, S, N
+    import tkinter.filedialog as tkFileDialog
 
 __author__ = 'Matias Laino'
 
@@ -16,7 +23,7 @@ class UIUtils:
         @type widget: tk.Widget
         """
 
-        scroll = tk.Scrollbar(widget)
+        scroll = Tkinter.Scrollbar(widget)
         scroll.config(command=widget.yview)
         widget.config(yscrollcommand=scroll.set)
 

@@ -4,7 +4,7 @@ The complete documentation can be retrieved <a href="http://htmlpreview.github.i
 
 A sample Jupyter IPython notebook can be found <a href="http://nbviewer.ipython.org/github/SoManyGoblins/inco-pln-nltk-extensions/blob/master/Test_Notebook.ipynb">here</a>. 
 
-The project has been tested on Windows, and the following tool versions:
+The project has been tested on Windows, Python 2.7.x/3.5.x, and the following tool versions:
 
 <ul>
 <li>FreeLing 3.1</li>

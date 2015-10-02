@@ -91,7 +91,7 @@ class ControlParse:
 
         parser = FreeLing(freeling_path, tagger=tagger)
 
-        tree = parser.raw_parse(string)[0]
+        tree = next(parser.raw_parse(string))
 
         self.output_text_area.delete(1.0, END)
 
@@ -114,7 +114,7 @@ class ControlParse:
 
         parser = MaltParser(parser_path, parser_model_path, tagger=tagger)
 
-        tree = parser.raw_parse(string)[0]
+        tree = next(parser.raw_parse(string))
 
         tree_str = str(tree)
 
@@ -135,7 +135,7 @@ class ControlParse:
 
         parser = StanfordShiftReduceParser(parser_path, parser_model_path, tagger=tagger)
 
-        tree = parser.raw_parse(string)[0]
+        tree = next(parser.raw_parse(string))
 
         tree_str = str(tree)
 

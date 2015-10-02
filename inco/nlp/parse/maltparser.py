@@ -34,7 +34,7 @@ class MaltParser(ParserI):
         self.path_to_jar = path_to_jar
 
         if self.path_to_jar is None:
-            self.path_to_jar = os.environ['NLP_MALTPARSER_JAR']
+            self.path_to_jar = os.environ['NLP_MALTPARSER']
 
         if self.path_to_model is None:
             self.path_to_model = os.environ['NLP_MALTPARSER_MODEL']

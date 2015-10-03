@@ -1,3 +1,6 @@
+from threading import Thread
+from inco.nlp.utils.frontend.progress_dialog import ProgressDialog
+
 try:
     import Tkinter              # Python 2
     import ttk
@@ -40,7 +43,7 @@ class ControlTokenize:
         ttk.Button(self.frame, text="Read from file", command=self.__read_from_file)\
             .grid(row=0, column=2, columnspan=2)
 
-        ttk.Button(self.frame, text="Tokenize with FreeLing", command=self.__tokenize_with_freeling)\
+        ttk.Button(self.frame, text="Tokenize with FreeLing", command=self.__on_tokenize_with_freeling_click)\
             .grid(row=2, column=1, columnspan=2, sticky=N+W+S+E)
 
         ttk.Label(self.frame, text="Output").grid(row=3, column=0, columnspan=columns)
@@ -51,26 +54,35 @@ class ControlTokenize:
         UIUtils.set_vertical_scroll(self.input_text_area)
         UIUtils.set_vertical_scroll(self.output_text_area)
 
-    def __tokenize_with_freeling(self):
-        freeling_path = ConfigurationManager.load()['freeling_path']
+    def __on_tokenize_with_freeling_click(self):
+        thread = Thread(target=self.__tokenize_with_freeling)
+        thread.start()
 
-        string = self.input_text_area.get("1.0", END)
+    def __tokenize_with_freeling(self):
+        self.progressDialog = ProgressDialog(self.parent)
 
         try:
-            tokenizer = FreeLing(freeling_path)
-            tokens = tokenizer.tokenize(string)
-        except:
-            tkMessageBox.showerror("Error", "FreeLing is not configured correctly, please verify path.")
-            return
+            freeling_path = ConfigurationManager.load()['freeling_path']
 
-        tokenized_string = "\n".join(tokens)
+            string = self.input_text_area.get("1.0", END)
 
-        self.output_text_area['state'] = 'normal'
+            try:
+                tokenizer = FreeLing(freeling_path)
+                tokens = tokenizer.tokenize(string)
+            except:
+                tkMessageBox.showerror("Error", "FreeLing is not configured correctly, please verify path.")
+                return
 
-        self.output_text_area.delete(1.0, END)
-        self.output_text_area.insert(INSERT, tokenized_string)
+            tokenized_string = "\n".join(tokens)
 
-        self.output_text_area['state'] = 'disabled'
+            self.output_text_area['state'] = 'normal'
+
+            self.output_text_area.delete(1.0, END)
+            self.output_text_area.insert(INSERT, tokenized_string)
+
+            self.output_text_area['state'] = 'disabled'
+        finally:
+            self.progressDialog.close()
 
     def __read_from_file(self):
         UIUtils.read_from_file_to_input(self.input_text_area)

@@ -1,12 +1,14 @@
+from threading import Thread
+from inco.nlp.utils.frontend.progress_dialog import ProgressDialog
 
 try:
   import Tkinter              # Python 2
   import ttk
-  from Tkconstants import END, INSERT, W, E, S, N
+  from Tkconstants import END, INSERT, W, E, S, N, HORIZONTAL
 except ImportError:
   import tkinter as Tkinter   # Python 3
   import tkinter.ttk as ttk
-  from tkinter.constants import END, INSERT, W, E, S, N
+  from tkinter.constants import END, INSERT, W, E, S, N, HORIZONTAL
 
 
 from nltk import Tree
@@ -39,11 +41,11 @@ class ControlParse:
         ttk.Button(self.frame, text="Read from file", command=self.__read_from_file) \
             .grid(row=0, column=2, columnspan=2)
 
-        ttk.Button(self.frame, text="Parse with FreeLing", command=self.__parse_with_freeling).grid(row=2, column=1,
+        ttk.Button(self.frame, text="Parse with FreeLing", command=self.__on_parse_with_freeling_click).grid(row=2, column=1,
                                                                                                     sticky=N + S + E + W)
-        ttk.Button(self.frame, text="Parse with MaltParser", command=self.__parse_with_maltparser).grid(row=2, column=2,
+        ttk.Button(self.frame, text="Parse with MaltParser", command=self.__on_parse_with_maltparser_click).grid(row=2, column=2,
                                                                                                         sticky=N + S + E + W)
-        ttk.Button(self.frame, text="Parse with Stanford SR", command=self.__parse_with_stanford).grid(row=2, column=3,
+        ttk.Button(self.frame, text="Parse with Stanford SR", command=self.__on_parse_with_stanford_click).grid(row=2, column=3,
                                                                                                        sticky=N + S + E + W)
 
         self.tagger_var = Tkinter.StringVar()
@@ -79,68 +81,96 @@ class ControlParse:
         UIUtils.set_vertical_scroll(self.output_dot_text_area)
 
     def __parse_with_freeling(self):
-        freeling_path = ConfigurationManager.load()['freeling_path']
+        self.progressDialog = ProgressDialog(self.parent)
 
-        string = self.input_text_area.get("1.0", END)
+        try:
 
-        if self.tagger_var.get() == 'FreeLing':
-            tagger = None
-        else:
-            tagger_path = ConfigurationManager.load()['treetagger_path']
-            tagger = TreeTagger(tagger_path)
+            freeling_path = ConfigurationManager.load()['freeling_path']
 
-        parser = FreeLing(freeling_path, tagger=tagger)
+            string = self.input_text_area.get("1.0", END)
 
-        tree = next(parser.raw_parse(string))
+            if self.tagger_var.get() == 'FreeLing':
+                tagger = None
+            else:
+                tagger_path = ConfigurationManager.load()['treetagger_path']
+                tagger = TreeTagger(tagger_path)
 
-        self.output_text_area.delete(1.0, END)
+            parser = FreeLing(freeling_path, tagger=tagger)
 
-        tree_str = str(tree)
+            tree = next(parser.raw_parse(string))
 
-        self.output_text_area.insert(INSERT, str(tree_str))
+            self.output_text_area.delete(1.0, END)
+
+            tree_str = str(tree)
+
+            self.output_text_area.insert(INSERT, str(tree_str))
+        finally:
+            self.stop_progressbar()
+
+    def __on_parse_with_freeling_click(self):
+        parse_thread = Thread(target=self.__parse_with_freeling)
+        parse_thread.start()
+
+    def __on_parse_with_maltparser_click(self):
+        parse_thread = Thread(target=self.__parse_with_maltparser)
+        parse_thread.start()
+
+    def __on_parse_with_stanford_click(self):
+        parse_thread = Thread(target=self.__parse_with_stanford)
+        parse_thread.start()
 
     def __parse_with_maltparser(self):
-        parser_path = ConfigurationManager.load()['maltparser_path']
-        parser_model_path = ConfigurationManager.load()['maltparser_model_path']
+        self.progressDialog = ProgressDialog(self.parent)
 
-        if self.tagger_var.get() == 'FreeLing':
-            tagger_path = ConfigurationManager.load()['freeling_path']
-            tagger = inco.nlp.tag.freeling.FreeLing(tagger_path)
-        else:
-            tagger_path = ConfigurationManager.load()['treetagger_path']
-            tagger = TreeTagger(tagger_path)
+        try:
+            parser_path = ConfigurationManager.load()['maltparser_path']
+            parser_model_path = ConfigurationManager.load()['maltparser_model_path']
 
-        string = self.input_text_area.get("1.0", END)
+            if self.tagger_var.get() == 'FreeLing':
+                tagger_path = ConfigurationManager.load()['freeling_path']
+                tagger = inco.nlp.tag.freeling.FreeLing(tagger_path)
+            else:
+                tagger_path = ConfigurationManager.load()['treetagger_path']
+                tagger = TreeTagger(tagger_path)
 
-        parser = MaltParser(parser_path, parser_model_path, tagger=tagger)
+            string = self.input_text_area.get("1.0", END)
 
-        tree = next(parser.raw_parse(string))
+            parser = MaltParser(parser_path, parser_model_path, tagger=tagger)
 
-        tree_str = str(tree)
+            tree = next(parser.raw_parse(string))
 
-        self.output_text_area.delete(1.0, END)
-        self.output_text_area.insert(INSERT, tree_str)
+            tree_str = str(tree)
+
+            self.output_text_area.delete(1.0, END)
+            self.output_text_area.insert(INSERT, tree_str)
+        finally:
+            self.stop_progressbar()
 
     def __parse_with_stanford(self):
-        parser_path = ConfigurationManager.load()['stanfordsr_path']
-        parser_model_path = ConfigurationManager.load()['stanfordsr_model_path']
-        freeling_path = ConfigurationManager.load()['freeling_path']
+        self.progressDialog = ProgressDialog(self.parent)
 
-        string = self.input_text_area.get("1.0", END)
-        # string = string.rstrip()
-        # string = "[" + string + "]"
-        # string = string.replace("\n", ",")
+        try:
+            parser_path = ConfigurationManager.load()['stanfordsr_path']
+            parser_model_path = ConfigurationManager.load()['stanfordsr_model_path']
+            freeling_path = ConfigurationManager.load()['freeling_path']
 
-        tagger = inco.nlp.tag.freeling.FreeLing(freeling_path)
+            string = self.input_text_area.get("1.0", END)
+            # string = string.rstrip()
+            # string = "[" + string + "]"
+            # string = string.replace("\n", ",")
 
-        parser = StanfordShiftReduceParser(parser_path, parser_model_path, tagger=tagger)
+            tagger = inco.nlp.tag.freeling.FreeLing(freeling_path)
 
-        tree = next(parser.raw_parse(string))
+            parser = StanfordShiftReduceParser(parser_path, parser_model_path, tagger=tagger)
 
-        tree_str = str(tree)
+            tree = next(parser.raw_parse(string))
 
-        self.output_text_area.delete(1.0, END)
-        self.output_text_area.insert(INSERT, tree_str)
+            tree_str = str(tree)
+
+            self.output_text_area.delete(1.0, END)
+            self.output_text_area.insert(INSERT, tree_str)
+        finally:
+            self.stop_progressbar()
 
     def __to_dot(self):
         string = self.output_text_area.get("1.0", END)
@@ -163,6 +193,14 @@ class ControlParse:
         tree = Tree.fromstring(string)
 
         tree.draw()
+        # self.progressDialog = ProgressDialog(self.parent)
+        # self.parent.after(2000, self.stop_progressbar)
+
+
+    def stop_progressbar(self):
+        self.progressDialog.close()
 
     def __read_from_file(self):
         UIUtils.read_from_file_to_input(self.input_text_area)
+
+
